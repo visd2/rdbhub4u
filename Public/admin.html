@@ -629,7 +629,7 @@
                     <div class="stat-label">Anime</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">❤</div>
+                    <div class="stat-icon">📺</div>
                     <div class="stat-number" id="webseriesCount">0</div>
                     <div class="stat-label">WebSeries</div>
                 </div>
@@ -666,7 +666,7 @@
                 <label>Description</label>
                 <textarea id="description" placeholder="Enter description"></textarea>
             </div>
-            
+
             <!-- Category System -->
             <div class="form-group">
                 <label>Category (Select up to 10)</label>
@@ -683,9 +683,9 @@
                         <input type="checkbox" id="cat-comedy" value="Comedy">
                         <label for="cat-comedy">Comedy</label>
                     </div>
-                     <div class="checkbox-item">
-                        <input type="checkbox" id="cat-comedy" value="Comedy">
-                        <label for="cat-comedy">Crime</label>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat-crime" value="Crime">
+                        <label for="cat-crime">Crime</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="cat-drama" value="Drama">
@@ -720,7 +720,7 @@
                     <small style="color: #999;">No categories selected</small>
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label>Language (Maximum 5) *</label>
                 <div class="checkbox-group">
@@ -744,14 +744,13 @@
                         <input type="checkbox" id="lang-spanish" value="Spanish">
                         <label for="lang-spanish">Spanish</label>
                     </div>
-                     <div class="checkbox-item">
-                        <input type="checkbox" id="lang-spanish" value="Spanish">
-                        <label for="lang-spanish">Telegu</label>
-                    
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lang-telegu" value="Telegu">
+                        <label for="lang-telegu">Telegu</label>
                     </div>
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label>Year</label>
                 <input type="number" id="year" placeholder="2024">
@@ -790,61 +789,7 @@
                         <input type="text" id="download4k" placeholder="https://example.com/movie-4k.mp4">
                     </div>
                 </div>
-                
-                <!-- Movie ZIP Download Links -->
-                <div class="zip-download-section" id="movieZipSection">
-                    <h4 style="color: #ff9800; margin-bottom: 15px;">🎁 Movie ZIP Download Links (Optional)</h4>
-                    <div class="zip-note">
-                        💡 Provide ZIP file links for complete movie downloads. Users can download the entire movie in ZIP format.
-                    </div>
-                    
-                    <div class="quality-inputs">
-                        <div class="quality-input">
-                            <label>📦 480p ZIP Link</label>
-                            <div class="zip-size-input">
-                                <input type="text" id="zip480p" placeholder="https://example.com/movie-480p.zip">
-                                <input type="text" id="zip480pSize" placeholder="Size" style="width: 100px;">
-                                <select id="zip480pSizeUnit">
-                                    <option value="MB">MB</option>
-                                    <option value="GB">GB</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="quality-input">
-                            <label>📦 720p ZIP Link</label>
-                            <div class="zip-size-input">
-                                <input type="text" id="zip720p" placeholder="https://example.com/movie-720p.zip">
-                                <input type="text" id="zip720pSize" placeholder="Size" style="width: 100px;">
-                                <select id="zip720pSizeUnit">
-                                    <option value="MB">MB</option>
-                                    <option value="GB">GB</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="quality-input">
-                            <label>📦 1080p ZIP Link</label>
-                            <div class="zip-size-input">
-                                <input type="text" id="zip1080p" placeholder="https://example.com/movie-1080p.zip">
-                                <input type="text" id="zip1080pSize" placeholder="Size" style="width: 100px;">
-                                <select id="zip1080pSizeUnit">
-                                    <option value="GB">GB</option>
-                                    <option value="MB">MB</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="quality-input">
-                            <label>📦 4K ZIP Link</label>
-                            <div class="zip-size-input">
-                                <input type="text" id="zip4k" placeholder="https://example.com/movie-4k.zip">
-                                <input type="text" id="zip4kSize" placeholder="Size" style="width: 100px;">
-                                <select id="zip4kSizeUnit">
-                                    <option value="GB">GB</option>
-                                    <option value="MB">MB</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- MOVIE में ZIP SECTION हटाया गया है -->
             </div>
 
             <!-- Series Options -->
@@ -864,19 +809,19 @@
 
                 <div id="episodesContainer"></div>
                 <button class="add-episode-btn" type="button" onclick="addEpisode()">+ Add Episode</button>
-                
-                <!-- Series ZIP Download Links -->
+
+                <!-- Series ZIP Download Links - केवल anime और webseries में show होगा -->
                 <div class="zip-download-section" id="seriesZipSection">
                     <h4 style="color: #ff9800; margin-bottom: 15px;">🎁 Complete Series ZIP Downloads (Optional)</h4>
                     <div class="zip-note">
                         💡 Provide ZIP file links for complete series downloads. Users can download entire seasons in ZIP format.
                     </div>
-                    
+
                     <div class="zip-quality-selector">
                         <button class="zip-quality-btn active" data-quality="season" onclick="showZipOption('season')">🌿 Season Wise</button>
                         <button class="zip-quality-btn" data-quality="complete" onclick="showZipOption('complete')">🌳 Complete Series</button>
                     </div>
-                    
+
                     <!-- Season Wise ZIP -->
                     <div class="zip-option active" id="zipSeasonOption">
                         <h5 style="color: #4CAF50; margin: 15px 0;">Season Wise ZIP Links</h5>
@@ -908,7 +853,7 @@
                         </div>
                         <button class="add-episode-btn" type="button" onclick="addSeasonZip()" style="background: #ff9800;">+ Add More Seasons</button>
                     </div>
-                    
+
                     <!-- Complete Series ZIP -->
                     <div class="zip-option" id="zipCompleteOption">
                         <h5 style="color: #4CAF50; margin: 15px 0;">Complete Series ZIP Links</h5>
@@ -956,7 +901,7 @@
                     <input type="checkbox" id="featured" style="width: auto; margin-right: 10px;"> Featured Content
                 </label>
             </div>
-            
+
             <button class="btn btn-primary" id="addContentBtn" onclick="addContent()">
                 ➕ Add Content
             </button>
@@ -1049,13 +994,13 @@
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     const checkedBoxes = document.querySelectorAll('#categoryCheckboxGroup input[type="checkbox"]:checked');
-                    
+
                     if (checkedBoxes.length > 10) {
                         this.checked = false;
                         showMessage('Maximum 10 categories allowed', 'error');
                         return;
                     }
-                    
+
                     selectedCategories = Array.from(checkedBoxes).map(cb => cb.value);
                     updateCategoryTags();
                 });
@@ -1116,12 +1061,16 @@
             const type = this.value;
             const movieLinks = document.getElementById('movieDownloadLinks');
             const seriesOptions = document.getElementById('seriesOptions');
+            const seriesZipSection = document.getElementById('seriesZipSection');
+
             if (type === 'movies') {
                 movieLinks.style.display = 'block';
                 seriesOptions.style.display = 'none';
             } else {
                 movieLinks.style.display = 'none';
                 seriesOptions.style.display = 'block';
+                // केवल anime और webseries में ZIP section show करें
+                seriesZipSection.style.display = 'block';
             }
         });
 
@@ -1131,10 +1080,10 @@
             document.querySelectorAll('.zip-option').forEach(option => {
                 option.classList.remove('active');
             });
-            
+
             // Show selected option
             document.getElementById(`zip${quality.charAt(0).toUpperCase() + quality.slice(1)}Option`).classList.add('active');
-            
+
             // Update button states
             document.querySelectorAll('.zip-quality-btn').forEach(btn => {
                 btn.classList.remove('active');
@@ -1249,30 +1198,30 @@
             const episodes = [];
             const container = document.getElementById('episodesContainer');
             const episodeSections = container.querySelectorAll('.episode-section');
-            
+
             episodeSections.forEach(section => {
                 const id = section.id.split('-')[1];
                 const epNumber = document.getElementById(`ep${id}-number`)?.value;
                 const epTitle = document.getElementById(`ep${id}-title`)?.value;
                 const download = {};
                 const zipDownload = {};
-                
+
                 // Get regular download links
                 const link480p = document.getElementById(`ep${id}-480p`)?.value?.trim();
                 const link720p = document.getElementById(`ep${id}-720p`)?.value?.trim();
-                
+
                 if (link480p) download['480p'] = link480p;
                 if (link720p) download['720p'] = link720p;
-                
+
                 // Get ZIP download links with size
                 const zip480p = document.getElementById(`ep${id}-zip480p`)?.value?.trim();
                 const zip480pSize = document.getElementById(`ep${id}-zip480pSize`)?.value?.trim();
                 const zip480pUnit = document.getElementById(`ep${id}-zip480pSizeUnit`)?.value;
-                
+
                 const zip720p = document.getElementById(`ep${id}-zip720p`)?.value?.trim();
                 const zip720pSize = document.getElementById(`ep${id}-zip720pSize`)?.value?.trim();
                 const zip720pUnit = document.getElementById(`ep${id}-zip720pSizeUnit`)?.value;
-                
+
                 if (zip480p) {
                     zipDownload['480p'] = {
                         link: zip480p,
@@ -1285,7 +1234,7 @@
                         size: zip720pSize ? `${zip720pSize} ${zip720pUnit}` : null
                     };
                 }
-                
+
                 episodes.push({
                     episodeNumber: parseInt(epNumber) || episodes.length + 1,
                     title: epTitle || `Episode ${epNumber || episodes.length + 1}`,
@@ -1293,7 +1242,7 @@
                     zipDownload: Object.keys(zipDownload).length > 0 ? zipDownload : undefined
                 });
             });
-            
+
             return episodes;
         }
 
@@ -1316,25 +1265,10 @@
             return languages;
         }
 
-        // Get Movie ZIP Data
+        // Movie ZIP Data - अब movie में ZIP नहीं होगा
         function getMovieZipData() {
-            const zipData = {};
-            const qualities = ['480p', '720p', '1080p', '4k'];
-            
-            qualities.forEach(quality => {
-                const link = document.getElementById(`zip${quality}`)?.value?.trim();
-                const size = document.getElementById(`zip${quality}Size`)?.value?.trim();
-                const unit = document.getElementById(`zip${quality}SizeUnit`)?.value;
-                
-                if (link) {
-                    zipData[quality] = {
-                        link: link,
-                        size: size ? `${size} ${unit}` : null
-                    };
-                }
-            });
-            
-            return Object.keys(zipData).length > 0 ? zipData : undefined;
+            // MOVIE में ZIP नहीं होगा
+            return undefined;
         }
 
         // Get Series ZIP Data
@@ -1343,17 +1277,17 @@
                 seasonWise: {},
                 completeSeries: {}
             };
-            
+
             // Get season wise ZIP links
             for (let i = 1; i <= seasonZipCounter; i++) {
                 const seasonData = {};
                 const qualities = ['480p', '720p'];
-                
+
                 qualities.forEach(quality => {
                     const link = document.getElementById(`season${i}Zip${quality}`)?.value?.trim();
                     const size = document.getElementById(`season${i}Zip${quality}Size`)?.value?.trim();
                     const unit = document.getElementById(`season${i}Zip${quality}SizeUnit`)?.value;
-                    
+
                     if (link) {
                         seasonData[quality] = {
                             link: link,
@@ -1361,19 +1295,19 @@
                         };
                     }
                 });
-                
+
                 if (Object.keys(seasonData).length > 0) {
                     zipData.seasonWise[`season${i}`] = seasonData;
                 }
             }
-            
+
             // Get complete series ZIP links
             const completeQualities = ['480p', '720p', '1080p'];
             completeQualities.forEach(quality => {
                 const link = document.getElementById(`completeZip${quality}`)?.value?.trim();
                 const size = document.getElementById(`completeZip${quality}Size`)?.value?.trim();
                 const unit = document.getElementById(`completeZip${quality}SizeUnit`)?.value;
-                
+
                 if (link) {
                     zipData.completeSeries[quality] = {
                         link: link,
@@ -1381,7 +1315,7 @@
                     };
                 }
             });
-            
+
             return Object.keys(zipData.seasonWise).length > 0 || Object.keys(zipData.completeSeries).length > 0 ? zipData : undefined;
         }
 
@@ -1393,17 +1327,17 @@
                         'Accept': 'application/json'
                     }
                 });
-                
+
                 if (!response.ok) {
                     throw new Error('Failed to fetch stats');
                 }
-                
+
                 const stats = await response.json();
                 document.getElementById('moviesCount').textContent = stats.movies || 0;
                 document.getElementById('animeCount').textContent = stats.anime || 0;
                 document.getElementById('webseriesCount').textContent = stats.webseries || 0;
                 document.getElementById('totalCount').textContent = stats.totalContent || 0;
-                
+
             } catch (error) {
                 console.error('Error loading stats:', error);
                 document.getElementById('moviesCount').textContent = '—';
@@ -1416,7 +1350,7 @@
         // ADD CONTENT
         async function addContent() {
             const addBtn = document.getElementById('addContentBtn');
-            
+
             // Check server connection
             if (!isServerOnline) {
                 const isOnline = await checkServerConnection();
@@ -1425,32 +1359,32 @@
                     return;
                 }
             }
-            
+
             const type = document.getElementById('contentType').value;
             const title = document.getElementById('title').value.trim();
             const image = document.getElementById('imageUrl').value.trim();
-            
+
             // Basic validation
             if (!title) {
                 showMessage('⚠ Please enter title', 'error');
                 return;
             }
-            
+
             if (!image) {
                 showMessage('⚠ Please enter image URL', 'error');
                 return;
             }
-            
+
             const languages = getSelectedLanguages();
             if (languages.length === 0) {
                 showMessage('⚠ Please select at least one language', 'error');
                 return;
             }
-            
+
             // Show loading state
             addBtn.disabled = true;
             addBtn.innerHTML = '⏳ Adding Content<span class="spinner"></span>';
-            
+
             // Prepare data object
             const data = {
                 title: title,
@@ -1464,7 +1398,7 @@
                 featured: document.getElementById('featured').checked || false,
                 language: languages
             };
-            
+
             // Handle movie specific data
             if (type === 'movies') {
                 const downloadLinks = {};
@@ -1474,29 +1408,26 @@
                         downloadLinks[quality] = link;
                     }
                 });
-                
+
                 if (Object.keys(downloadLinks).length > 0) {
                     data.download = downloadLinks;
                 }
-                
+
                 // Add quality array
                 const qualities = [];
                 if (data.download) {
                     qualities.push(...Object.keys(data.download));
                 }
                 data.quality = qualities.length > 0 ? qualities : ['480p', '720p'];
-                
-                // Add ZIP download data for movies
-                const zipData = getMovieZipData();
-                if (zipData) {
-                    data.zipDownload = zipData;
-                }
+
+                // MOVIE में ZIP download नहीं होगा
+                // data.zipDownload = undefined;
             }
             // Handle anime/webseries
             else {
                 data.seasons = parseInt(document.getElementById('seasons').value) || 1;
                 data.totalEpisodes = parseInt(document.getElementById('totalEpisodes').value) || 1;
-                
+
                 const episodes = getEpisodesData();
                 if (episodes.length === 0) {
                     addBtn.disabled = false;
@@ -1504,9 +1435,9 @@
                     showMessage('⚠ Please add at least one episode with download links', 'error');
                     return;
                 }
-                
+
                 data.episodes = episodes;
-                
+
                 // Get all qualities from episodes
                 const allQualities = new Set();
                 episodes.forEach(ep => {
@@ -1516,41 +1447,41 @@
                 if (data.quality.length === 0) {
                     data.quality = ['480p', '720p'];
                 }
-                
-                // Add ZIP download data for series
+
+                // Add ZIP download data for series (only for anime and webseries)
                 const zipData = getSeriesZipData();
                 if (zipData) {
                     data.zipDownload = zipData;
                 }
             }
-            
+
             console.log('Sending data to:', `${API_URL}/${type}`);
             console.log('Data:', JSON.stringify(data, null, 2));
-            
+
             try {
                 const response = await fetch(`${API_URL}/${type}`, {
                     method: 'POST',
-                    headers: { 
+                    headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json'
                     },
                     body: JSON.stringify(data)
                 });
-                
+
                 console.log('Response status:', response.status);
-                
+
                 if (response.ok) {
                     const result = await response.json();
                     console.log('Success:', result);
-                    
+
                     showMessage(`✅ ${type === 'movies' ? 'Movie' : type.charAt(0).toUpperCase() + type.slice(1)} "${title}" added successfully!`, 'success');
-                    
+
                     // Reset form
                     resetForm(type);
-                    
+
                     // Update stats
                     loadStats();
-                    
+
                 } else {
                     let errorMsg = 'Failed to add content';
                     try {
@@ -1559,10 +1490,10 @@
                     } catch (e) {
                         errorMsg = `Server error: ${response.status}`;
                     }
-                    
+
                     showMessage(`❌ Error: ${errorMsg}`, 'error');
                 }
-                
+
             } catch (error) {
                 console.error('Network error:', error);
                 showMessage(`❌ Network error: ${error.message}`, 'error');
@@ -1585,37 +1516,30 @@
             document.getElementById('duration').value = '';
             document.getElementById('videoUrl').value = '';
             document.getElementById('featured').checked = false;
-            
+
             // Reset categories
             selectedCategories = [];
             document.querySelectorAll('#categoryCheckboxGroup input[type="checkbox"]').forEach(cb => cb.checked = false);
             updateCategoryTags();
-            
+
             // Reset languages
             document.querySelectorAll('input[type="checkbox"][id^="lang-"]').forEach(cb => cb.checked = false);
-            
+
             // Reset season ZIP counter
             seasonZipCounter = 1;
-            
+
             // Type specific reset
             if (type === 'movies') {
                 // Reset regular download links
                 ['480p', '720p', '1080p', '4k'].forEach(quality => {
                     document.getElementById(`download${quality}`).value = '';
                 });
-                
-                // Reset ZIP download links
-                ['480p', '720p', '1080p', '4k'].forEach(quality => {
-                    document.getElementById(`zip${quality}`).value = '';
-                    document.getElementById(`zip${quality}Size`).value = '';
-                    document.getElementById(`zip${quality}SizeUnit`).value = 'MB';
-                });
             } else {
                 document.getElementById('seasons').value = '1';
                 document.getElementById('totalEpisodes').value = '';
                 document.getElementById('episodesContainer').innerHTML = '';
                 episodeCounter = 0;
-                
+
                 // Reset series ZIP sections
                 document.getElementById('seasonZipContainer').innerHTML = `
                     <div class="quality-inputs">
@@ -1643,7 +1567,7 @@
                         </div>
                     </div>
                 `;
-                
+
                 // Reset complete series ZIP
                 ['480p', '720p', '1080p'].forEach(quality => {
                     document.getElementById(`completeZip${quality}`).value = '';
@@ -1653,37 +1577,85 @@
             }
         }
 
-        // Load Content
+        // Load Content - FIXED VERSION
         async function loadContent() {
             const type = document.getElementById('manageType').value;
             const contentList = document.getElementById('contentList');
             contentList.innerHTML = '<div class="loading">Loading...</div>';
-            
+
             try {
                 const response = await fetch(`${API_URL}/${type}`, {
                     headers: {
                         'Accept': 'application/json'
                     }
                 });
-                
+
                 if (!response.ok) {
                     throw new Error(`Failed to fetch ${type}`);
                 }
-                
+
                 const result = await response.json();
-                if (result.success && result[type]) {
-                    allContent = result[type]; // Access the array using the 'type' key (e.g., result.movies)
-                    displayContent(allContent);
-                } else {
-                    throw new Error(result.error || `Could not find '${type}' in API response`);
+                console.log('API Response:', result);
+
+                // Check different response structures
+                if (result.success) {
+                    // Structure 1: {success: true, movies: [...], count: X}
+                    if (result[type] && Array.isArray(result[type])) {
+                        allContent = result[type];
+                    }
+                    // Structure 2: {success: true, data: [...]}
+                    else if (result.data && Array.isArray(result.data)) {
+                        allContent = result.data;
+                    }
+                    // Structure 3: Direct array
+                    else if (Array.isArray(result)) {
+                        allContent = result;
+                    }
+                    else {
+                        // Try to find any array in the response
+                        for (const key in result) {
+                            if (Array.isArray(result[key]) && key !== 'count' && key !== 'success') {
+                                allContent = result[key];
+                                break;
+                            }
+                        }
+                    }
                 }
-                
+                // Direct array response
+                else if (Array.isArray(result)) {
+                    allContent = result;
+                }
+                else {
+                    // Try to extract array from object
+                    for (const key in result) {
+                        if (Array.isArray(result[key])) {
+                            allContent = result[key];
+                            break;
+                        }
+                    }
+                }
+
+                console.log('Extracted content:', allContent);
+
+                if (!allContent || !Array.isArray(allContent) || allContent.length === 0) {
+                    contentList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📦</div>
+                            <div>No ${type} found</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                displayContent(allContent);
+
             } catch (error) {
                 console.error(`Error loading ${type}:`, error);
                 contentList.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-state-icon">⚠</div>
                         <div>Error loading ${type}. Check server connection.</div>
+                        <div style="font-size: 12px; margin-top: 10px; color: #666;">${error.message}</div>
                     </div>
                 `;
             }
@@ -1692,7 +1664,7 @@
         // Display Content
         function displayContent(content) {
             const contentList = document.getElementById('contentList');
-            
+
             if (!content || content.length === 0) {
                 contentList.innerHTML = `
                     <div class="empty-state">
@@ -1702,36 +1674,45 @@
                 `;
                 return;
             }
-            
-            contentList.innerHTML = content.map(item => `
-                <div class="content-card" data-id="${item._id}">
-                    <img src="${item.image}" alt="${item.title}" class="content-img" 
+
+            contentList.innerHTML = content.map(item => {
+                // Check if item has zipDownload
+                const hasZip = item.zipDownload && (
+                    (item.zipDownload.seasonWise && Object.keys(item.zipDownload.seasonWise).length > 0) ||
+                    (item.zipDownload.completeSeries && Object.keys(item.zipDownload.completeSeries).length > 0) ||
+                    (typeof item.zipDownload === 'object' && Object.keys(item.zipDownload).length > 0 &&
+                     !item.zipDownload.seasonWise && !item.zipDownload.completeSeries)
+                );
+
+                return `
+                <div class="content-card" data-id="${item._id || item.id}">
+                    <img src="${item.image}" alt="${item.title}" class="content-img"
                          onerror="this.src='https://via.placeholder.com/200x280?text=No+Image'">
                     <div class="content-info">
                         <div class="content-title" title="${item.title}">${item.title}</div>
                         <div class="content-meta">
                             <span>${item.year || 'N/A'}</span>
                             <span>⭐ ${item.rating || 'N/A'}</span>
-                            ${item.zipDownload ? '<span style="color: #ff9800;">📦 ZIP</span>' : ''}
+                            ${hasZip ? '<span style="color: #ff9800;">📦 ZIP</span>' : ''}
                         </div>
                         <div class="content-actions">
-                            <button class="btn btn-small btn-edit" onclick="openEditModal('${item._id}', '${document.getElementById('manageType').value}')">
+                            <button class="btn btn-small btn-edit" onclick="openEditModal('${item._id || item.id}', '${document.getElementById('manageType').value}')">
                                 ✏ Edit
                             </button>
-                            <button class="btn btn-small btn-delete" onclick="deleteContent('${item._id}', '${document.getElementById('manageType').value}')">
+                            <button class="btn btn-small btn-delete" onclick="deleteContent('${item._id || item.id}', '${document.getElementById('manageType').value}')">
                                 🗑 Delete
                             </button>
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         // Filter Content
         function filterContent() {
             const searchTerm = document.getElementById('searchBox').value.toLowerCase();
             const filtered = allContent.filter(item =>
-                item.title.toLowerCase().includes(searchTerm) ||
+                (item.title && item.title.toLowerCase().includes(searchTerm)) ||
                 (item.category && item.category.toLowerCase().includes(searchTerm)) ||
                 (item.description && item.description.toLowerCase().includes(searchTerm))
             );
@@ -1743,33 +1724,23 @@
             try {
                 const response = await fetch(`${API_URL}/${type}/${id}`);
                 if (!response.ok) throw new Error('Failed to fetch item');
-                
+
                 const item = await response.json();
-                
+
                 let zipSection = '';
-                if (type === 'movies' && item.zipDownload) {
+                // केवल anime और webseries में ZIP section show करें
+                if ((type === 'anime' || type === 'webseries') && item.zipDownload) {
                     zipSection = `
-                        <div id="editMovieZipSection">
-                            <h3 style="color: #ff9800; margin: 20px 0;">🎁 Movie ZIP Download Links</h3>
-                            <div class="quality-inputs">
-                                ${['480p', '720p', '1080p', '4k'].map(quality => `
-                                    <div class="quality-input">
-                                        <label>📦 ${quality} ZIP Link</label>
-                                        <div class="zip-size-input">
-                                            <input type="text" id="editZip${quality}" value="${item.zipDownload[quality]?.link || ''}">
-                                            <input type="text" id="editZip${quality}Size" value="${item.zipDownload[quality]?.size?.split(' ')[0] || ''}" placeholder="Size" style="width: 100px;">
-                                            <select id="editZip${quality}SizeUnit" style="width: 80px;">
-                                                <option value="MB" ${item.zipDownload[quality]?.size?.includes('MB') ? 'selected' : ''}>MB</option>
-                                                <option value="GB" ${item.zipDownload[quality]?.size?.includes('GB') ? 'selected' : ''}>GB</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                `).join('')}
+                        <div id="editZipSection">
+                            <h3 style="color: #ff9800; margin: 20px 0;">🎁 Series ZIP Download Links</h3>
+                            <div class="zip-note">
+                                💡 ZIP downloads are only available for anime and web series.
                             </div>
+                            <!-- Add ZIP fields here based on item.zipDownload structure -->
                         </div>
                     `;
                 }
-                
+
                 const modalContent = `
                     <div class="modal-header">
                         <h2>Edit ${type === 'movies' ? 'Movie' : type}</h2>
@@ -1777,7 +1748,7 @@
                     </div>
                     <input type="hidden" id="editId" value="${item._id}">
                     <input type="hidden" id="editType" value="${type}">
-                    
+
                     <div class="form-group">
                         <label>Title *</label>
                         <input type="text" id="editTitle" value="${item.title || ''}" required>
@@ -1810,7 +1781,7 @@
                         <label>Video URL</label>
                         <input type="text" id="editVideoUrl" value="${item.videoUrl || ''}">
                     </div>
-                    
+
                     ${type === 'movies' ? `
                     <div id="editMovieDownloadLinks">
                         <h3 style="color: #667eea; margin: 20px 0;">Download Links</h3>
@@ -1833,24 +1804,36 @@
                             </div>
                         </div>
                     </div>
+                    ` : `
+                    <div id="editSeriesInfo">
+                        <h3 style="color: #667eea; margin: 20px 0;">Series Information</h3>
+                        <div class="form-group">
+                            <label>Number of Seasons</label>
+                            <input type="number" id="editSeasons" value="${item.seasons || 1}">
+                        </div>
+                        <div class="form-group">
+                            <label>Total Episodes</label>
+                            <input type="number" id="editTotalEpisodes" value="${item.totalEpisodes || ''}">
+                        </div>
+                    </div>
                     ${zipSection}
-                    ` : ''}
-                    
+                    `}
+
                     <div class="form-group" style="margin-top: 20px;">
                         <label>
                             <input type="checkbox" id="editFeatured" ${item.featured ? 'checked' : ''} style="width: auto; margin-right: 10px;">
                             Featured Content
                         </label>
                     </div>
-                    
+
                     <button class="btn btn-primary" onclick="updateContent()">
                         💾 Save Changes
                     </button>
                 `;
-                
+
                 document.getElementById('editForm').innerHTML = modalContent;
                 document.getElementById('editModal').classList.add('active');
-                
+
             } catch (error) {
                 console.error('Error opening edit modal:', error);
                 showMessage('❌ Error loading item details', 'error');
@@ -1866,7 +1849,7 @@
         async function updateContent() {
             const id = document.getElementById('editId').value;
             const type = document.getElementById('editType').value;
-            
+
             const data = {
                 title: document.getElementById('editTitle').value.trim(),
                 image: document.getElementById('editImageUrl').value.trim(),
@@ -1878,7 +1861,7 @@
                 videoUrl: document.getElementById('editVideoUrl').value.trim(),
                 featured: document.getElementById('editFeatured').checked
             };
-            
+
             // Add download links for movies
             if (type === 'movies') {
                 const downloadLinks = {};
@@ -1886,32 +1869,20 @@
                     const link = document.getElementById(`editDownload${quality}`).value.trim();
                     if (link) downloadLinks[quality] = link;
                 });
-                
+
                 if (Object.keys(downloadLinks).length > 0) {
                     data.download = downloadLinks;
                     data.quality = Object.keys(downloadLinks);
                 }
-                
-                // Add ZIP download links for movies
-                const zipData = {};
-                ['480p', '720p', '1080p', '4k'].forEach(quality => {
-                    const link = document.getElementById(`editZip${quality}`)?.value?.trim();
-                    const size = document.getElementById(`editZip${quality}Size`)?.value?.trim();
-                    const unit = document.getElementById(`editZip${quality}SizeUnit`)?.value;
-                    
-                    if (link) {
-                        zipData[quality] = {
-                            link: link,
-                            size: size ? `${size} ${unit}` : null
-                        };
-                    }
-                });
-                
-                if (Object.keys(zipData).length > 0) {
-                    data.zipDownload = zipData;
-                }
+
+                // MOVIE में ZIP download नहीं होगा
+                // data.zipDownload = undefined;
+            } else {
+                // For series, add seasons info
+                data.seasons = parseInt(document.getElementById('editSeasons').value) || 1;
+                data.totalEpisodes = parseInt(document.getElementById('editTotalEpisodes').value) || 1;
             }
-            
+
             try {
                 const response = await fetch(`${API_URL}/${type}/${id}`, {
                     method: 'PUT',
@@ -1920,7 +1891,7 @@
                     },
                     body: JSON.stringify(data)
                 });
-                
+
                 if (response.ok) {
                     showMessage('✅ Content updated successfully!', 'success');
                     closeEditModal();
@@ -1939,12 +1910,12 @@
         // Delete Content
         async function deleteContent(id, type) {
             if (!confirm('Are you sure you want to delete this content?')) return;
-            
+
             try {
                 const response = await fetch(`${API_URL}/${type}/${id}`, {
                     method: 'DELETE'
                 });
-                
+
                 if (response.ok) {
                     showMessage('✅ Content deleted successfully!', 'success');
                     loadContent();
@@ -1963,7 +1934,7 @@
             await checkServerConnection();
             loadStats();
             initCategorySystem();
-            
+
             // Auto-fill test data button for Movie
             const testBtnMovie = document.createElement('button');
             testBtnMovie.className = 'btn';
@@ -1980,25 +1951,19 @@
                 document.getElementById('duration').value = '3h 2m';
                 document.getElementById('download480p').value = 'https://example.com/avengers-480p.mp4';
                 document.getElementById('download720p').value = 'https://example.com/avengers-720p.mp4';
-                document.getElementById('zip480p').value = 'https://example.com/avengers-480p.zip';
-                document.getElementById('zip480pSize').value = '1.5';
-                document.getElementById('zip480pSizeUnit').value = 'GB';
-                document.getElementById('zip720p').value = 'https://example.com/avengers-720p.zip';
-                document.getElementById('zip720pSize').value = '3.2';
-                document.getElementById('zip720pSizeUnit').value = 'GB';
                 document.querySelector('#lang-english').checked = true;
                 document.querySelector('#cat-action').checked = true;
                 document.querySelector('#cat-scifi').checked = true;
                 updateCategoryTags();
-                
+
                 // Show movie section
                 document.getElementById('movieDownloadLinks').style.display = 'block';
                 document.getElementById('seriesOptions').style.display = 'none';
-                
+
                 // Trigger image preview
                 document.getElementById('imageUrl').dispatchEvent(new Event('input'));
             };
-            
+
             // Auto-fill test data button for Anime
             const testBtnAnime = document.createElement('button');
             testBtnAnime.className = 'btn';
@@ -2026,11 +1991,11 @@
                 document.querySelector('#cat-drama').checked = true;
                 document.querySelector('#cat-fantasy').checked = true;
                 updateCategoryTags();
-                
+
                 // Show series section
                 document.getElementById('movieDownloadLinks').style.display = 'none';
                 document.getElementById('seriesOptions').style.display = 'block';
-                
+
                 // Add sample episodes
                 addEpisode();
                 document.getElementById('ep1-480p').value = 'https://example.com/aot-ep1-480p.mp4';
@@ -2038,13 +2003,56 @@
                 document.getElementById('ep1-zip480p').value = 'https://example.com/aot-ep1-480p.zip';
                 document.getElementById('ep1-zip480pSize').value = '350';
                 document.getElementById('ep1-zip480pSizeUnit').value = 'MB';
-                
+
                 // Trigger image preview
                 document.getElementById('imageUrl').dispatchEvent(new Event('input'));
             };
-            
+
+            // Auto-fill test data button for Web Series
+            const testBtnWebSeries = document.createElement('button');
+            testBtnWebSeries.className = 'btn';
+            testBtnWebSeries.style.background = '#2196f3';
+            testBtnWebSeries.style.marginLeft = '10px';
+            testBtnWebSeries.innerHTML = '📺 Test Web Series';
+            testBtnWebSeries.onclick = function() {
+                document.getElementById('contentType').value = 'webseries';
+                document.getElementById('title').value = 'Money Heist';
+                document.getElementById('imageUrl').value = 'https://m.media-amazon.com/images/M/MV5BODI0ZTljYTMtODQ1NC00NmI0LTk1YWUtN2FlNDM1MDExMDlhXkEyXkFqcGdeQXVyMTM0NTUzNDIy._V1_FMjpg_UX1000_.jpg';
+                document.getElementById('description').value = 'A criminal mastermind who goes by "The Professor" has a plan to pull off the biggest heist in recorded history -- to print billions of euros in the Royal Mint of Spain.';
+                document.getElementById('year').value = '2017';
+                document.getElementById('rating').value = '8.2';
+                document.getElementById('duration').value = '45m per episode';
+                document.getElementById('seasons').value = '5';
+                document.getElementById('totalEpisodes').value = '41';
+                document.getElementById('season1Zip480p').value = 'https://example.com/moneyheist-s1-480p.zip';
+                document.getElementById('season1Zip480pSize').value = '8.5';
+                document.getElementById('season1Zip480pSizeUnit').value = 'GB';
+                document.getElementById('completeZip720p').value = 'https://example.com/moneyheist-complete-720p.zip';
+                document.getElementById('completeZip720pSize').value = '45';
+                document.getElementById('completeZip720pSizeUnit').value = 'GB';
+                document.querySelector('#lang-spanish').checked = true;
+                document.querySelector('#lang-english').checked = true;
+                document.querySelector('#cat-action').checked = true;
+                document.querySelector('#cat-thriller').checked = true;
+                document.querySelector('#cat-drama').checked = true;
+                updateCategoryTags();
+
+                // Show series section
+                document.getElementById('movieDownloadLinks').style.display = 'none';
+                document.getElementById('seriesOptions').style.display = 'block';
+
+                // Add sample episodes
+                addEpisode();
+                document.getElementById('ep1-480p').value = 'https://example.com/mh-s1e1-480p.mp4';
+                document.getElementById('ep1-720p').value = 'https://example.com/mh-s1e1-720p.mp4';
+
+                // Trigger image preview
+                document.getElementById('imageUrl').dispatchEvent(new Event('input'));
+            };
+
             const addBtn = document.getElementById('addContentBtn');
-            addBtn.parentNode.insertBefore(testBtnAnime, addBtn);
+            addBtn.parentNode.insertBefore(testBtnWebSeries, addBtn);
+            addBtn.parentNode.insertBefore(testBtnAnime, testBtnWebSeries);
             addBtn.parentNode.insertBefore(testBtnMovie, testBtnAnime);
         });
     </script>

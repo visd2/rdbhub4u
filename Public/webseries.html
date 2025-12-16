@@ -543,11 +543,11 @@
             .series-poster {
                 height: 300px;
             }
-            
+
             .pagination-container {
                 gap: 0.8rem;
             }
-            
+
             .pagination-btn {
                 padding: 0.5rem 1.2rem;
                 min-width: 100px;
@@ -611,21 +611,21 @@
             .footer-bottom {
                 padding: 0 20px;
             }
-            
+
             .pagination-container {
                 flex-direction: column;
                 gap: 0.5rem;
             }
-            
+
             .pagination-info {
                 order: 3;
                 margin-top: 0.5rem;
             }
-            
+
             .page-numbers {
                 order: 2;
             }
-            
+
             .pagination-btn {
                 min-width: 90px;
                 padding: 0.4rem 1rem;
@@ -673,7 +673,7 @@
                 font-size: 0.7rem;
                 padding: 0.3rem 0.6rem;
             }
-            
+
             .page-number {
                 width: 35px;
                 height: 35px;
@@ -689,11 +689,11 @@
             .series-poster {
                 height: 280px;
             }
-            
+
             .page-numbers {
                 gap: 0.3rem;
             }
-            
+
             .page-number {
                 width: 30px;
                 height: 30px;
@@ -709,7 +709,7 @@
             <div class="logo-icon">▶</div>
             MoviesHuB4u
         </div>
-        
+
         <div class="menu-toggle" onclick="toggleSidebar()">
             <span></span>
             <span></span>
@@ -730,7 +730,7 @@
             <div class="sidebar-logo-icon">▶</div>
             RDBHuB4u
         </div>
-        
+
         <ul class="sidebar-nav">
             <li><a href="index.html">Home</a></li>
             <li><a href="movies.html">Movies</a></li>
@@ -774,19 +774,19 @@
         <div class="series-grid" id="seriesGrid">
             <div class="loading">Loading web series...</div>
         </div>
-        
+
         <!-- NEW PAGINATION -->
         <div class="pagination-container" id="paginationContainer">
             <button class="pagination-btn" id="prevBtn" onclick="changePage(currentPage - 1)" disabled>
                 <i class="fas fa-chevron-left"></i> Previous
             </button>
-            
+
             <div class="page-numbers" id="pageNumbers"></div>
-            
+
             <button class="pagination-btn" id="nextBtn" onclick="changePage(currentPage + 1)">
                 Next <i class="fas fa-chevron-right"></i>
             </button>
-            
+
             <div class="pagination-info" id="paginationInfo">
                 Page 1 of 1
             </div>
@@ -842,7 +842,7 @@
 
     <script>
         const API_URL = 'https://rdbhub4u.onrender.com/api';
-        
+
         // Pagination variables
         const ITEMS_PER_PAGE = 10;
         let currentPage = 1;
@@ -853,50 +853,41 @@
         let currentCategory = 'all';
         let searchTerm = '';
 
-       
-        
+
+
         // Load web series from API
-        async function loadAllMovies() {
+        async function loadAllWebSeries() {
     try {
-        console.log('📡 Fetching movies from API...');
-
         const response = await fetch(`${API_URL}/webseries`);
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('✅ API Response:', data);
-
-        if (data.success && Array.isArray(data.contents)) {
-            allMovies = data.contents;
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success && data.webseries && data.webseries.length > 0) {
+                allWebSeries = data.webseries;
+            }
         } else {
-            allMovies = [];
-            console.warn('⚠️ No movies found in API response');
+            console.error('Failed to load webseries from API');
+            allWebSeries = []; // Set to empty array on failure
         }
-
     } catch (error) {
-        console.error('❌ Failed to load movies from API:', error.message);
-        allMovies = []; // ❌ no sample fallback
+        console.error('API call failed, using empty array:', error);
+        allWebSeries = []; // Set to empty array on error
     }
 
-    filterAndPaginateMovies();
+    filterAndPaginateWebSeries();
 }
-
 
         // Filter series based on search and category
         function filterSeries() {
             let filtered = [...allSeries];
 
             if (currentCategory !== 'all') {
-                filtered = filtered.filter(series => 
+                filtered = filtered.filter(series =>
                     series.category && series.category.toLowerCase() === currentCategory.toLowerCase()
                 );
             }
 
             if (searchTerm) {
-                filtered = filtered.filter(series => 
+                filtered = filtered.filter(series =>
                     series.title.toLowerCase().includes(searchTerm.toLowerCase())
                 );
             }
@@ -909,7 +900,7 @@
             filteredSeries = filterSeries();
             totalPages = Math.ceil(filteredSeries.length / ITEMS_PER_PAGE);
             currentPage = 1; // Reset to first page on filter
-            
+
             updatePagination();
             loadPageSeries(currentPage);
         }
@@ -927,7 +918,7 @@
                 paginationContainer.style.display = 'none';
                 return;
             }
-            
+
             paginationContainer.style.display = 'flex';
 
             // Update button states
@@ -936,16 +927,16 @@
 
             // Update page numbers
             pageNumbers.innerHTML = '';
-            
+
             // Show max 5 page numbers
             let startPage = Math.max(1, currentPage - 2);
             let endPage = Math.min(totalPages, startPage + 4);
-            
+
             // Adjust if we're at the end
             if (endPage - startPage < 4) {
                 startPage = Math.max(1, endPage - 4);
             }
-            
+
             for (let i = startPage; i <= endPage; i++) {
                 const pageBtn = document.createElement('div');
                 pageBtn.className = `page-number ${i === currentPage ? 'active' : ''}`;
@@ -963,11 +954,11 @@
         // Change current page
         function changePage(page) {
             if (page < 1 || page > totalPages) return;
-            
+
             currentPage = page;
             loadPageSeries(currentPage);
             updatePagination();
-            
+
             // Scroll to top of series grid
             document.getElementById('seriesGrid').scrollIntoView({
                 behavior: 'smooth',
@@ -980,14 +971,14 @@
             const startIndex = (page - 1) * ITEMS_PER_PAGE;
             const endIndex = startIndex + ITEMS_PER_PAGE;
             const pageSeries = filteredSeries.slice(startIndex, endIndex);
-            
+
             renderSeries(pageSeries);
         }
 
         // Render series to grid
         function renderSeries(seriesList) {
             const grid = document.getElementById('seriesGrid');
-            
+
             if (seriesList.length === 0) {
                 grid.innerHTML = '<div class="loading">No web series found</div>';
                 return;
@@ -995,7 +986,7 @@
 
             grid.innerHTML = seriesList.map(series => `
                 <div class="series-card" onclick="openDetail('${series._id}')">
-                    <img src="${series.image}" alt="${series.title}" class="series-poster" 
+                    <img src="${series.image}" alt="${series.title}" class="series-poster"
                          onerror="this.src='https://via.placeholder.com/250x350?text=No+Image'">
                     <div class="series-info">
                         <span class="series-category">${series.category || 'Series'}</span>
@@ -1024,7 +1015,7 @@
         // Filter by category
         function filterCategory(category) {
             currentCategory = category;
-            
+
             const badge = document.getElementById('categoryBadge');
             if (category === 'all') {
                 badge.style.display = 'none';
@@ -1032,9 +1023,9 @@
                 badge.style.display = 'inline-block';
                 badge.textContent = '• ' + category;
             }
-            
+
             filterAndPaginateSeries();
-            
+
             const sidebar = document.getElementById('sidebar');
             if (sidebar.classList.contains('active')) {
                 toggleSidebar();

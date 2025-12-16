@@ -627,11 +627,11 @@
             .movie-poster {
                 height: 300px;
             }
-            
+
             .pagination-container {
                 gap: 0.8rem;
             }
-            
+
             .pagination-btn {
                 padding: 0.5rem 1.2rem;
                 min-width: 100px;
@@ -708,21 +708,21 @@
             .meta-label {
                 min-width: 60px;
             }
-            
+
             .pagination-container {
                 flex-direction: column;
                 gap: 0.5rem;
             }
-            
+
             .pagination-info {
                 order: 3;
                 margin-top: 0.5rem;
             }
-            
+
             .page-numbers {
                 order: 2;
             }
-            
+
             .pagination-btn {
                 min-width: 90px;
                 padding: 0.4rem 1rem;
@@ -786,7 +786,7 @@
                 min-width: 50px;
                 font-size: 0.65rem;
             }
-            
+
             .page-number {
                 width: 35px;
                 height: 35px;
@@ -806,11 +806,11 @@
             .movie-description {
                 -webkit-line-clamp: 3;
             }
-            
+
             .page-numbers {
                 gap: 0.3rem;
             }
-            
+
             .page-number {
                 width: 30px;
                 height: 30px;
@@ -893,19 +893,19 @@
                 <i class="fas fa-spinner fa-spin"></i> Loading movies...
             </div>
         </div>
-        
+
         <!-- NEW PAGINATION -->
         <div class="pagination-container" id="paginationContainer">
             <button class="pagination-btn" id="prevBtn" onclick="changePage(currentPage - 1)" disabled>
                 <i class="fas fa-chevron-left"></i> Previous
             </button>
-            
+
             <div class="page-numbers" id="pageNumbers"></div>
-            
+
             <button class="pagination-btn" id="nextBtn" onclick="changePage(currentPage + 1)">
                 Next <i class="fas fa-chevron-right"></i>
             </button>
-            
+
             <div class="pagination-info" id="paginationInfo">
                 Page 1 of 1
             </div>
@@ -969,8 +969,8 @@
         let totalPages = 1;
         let filteredMovies = [];
 
-        
-        
+
+
         let allMovies = [];
         let currentCategory = 'all';
         let searchTerm = '';
@@ -986,8 +986,8 @@
 
         const data = await response.json();
 
-        if (data.success && Array.isArray(data.contents)) {
-            allMovies = data.contents;
+        if (data.success && Array.isArray(data.movies)) {
+            allMovies = data.movies;
         } else {
             allMovies = [];
             console.warn('No movies found in API response');
@@ -1040,7 +1040,7 @@
             filteredMovies = filterMovies();
             totalPages = Math.ceil(filteredMovies.length / ITEMS_PER_PAGE);
             currentPage = 1; // Reset to first page on filter
-            
+
             updatePagination();
             loadPageMovies(currentPage);
         }
@@ -1058,7 +1058,7 @@
                 paginationContainer.style.display = 'none';
                 return;
             }
-            
+
             paginationContainer.style.display = 'flex';
 
             // Update button states
@@ -1067,16 +1067,16 @@
 
             // Update page numbers
             pageNumbers.innerHTML = '';
-            
+
             // Show max 5 page numbers
             let startPage = Math.max(1, currentPage - 2);
             let endPage = Math.min(totalPages, startPage + 4);
-            
+
             // Adjust if we're at the end
             if (endPage - startPage < 4) {
                 startPage = Math.max(1, endPage - 4);
             }
-            
+
             for (let i = startPage; i <= endPage; i++) {
                 const pageBtn = document.createElement('div');
                 pageBtn.className = `page-number ${i === currentPage ? 'active' : ''}`;
@@ -1094,11 +1094,11 @@
         // Change current page
         function changePage(page) {
             if (page < 1 || page > totalPages) return;
-            
+
             currentPage = page;
             loadPageMovies(currentPage);
             updatePagination();
-            
+
             // Scroll to top of movies grid
             document.getElementById('moviesGrid').scrollIntoView({
                 behavior: 'smooth',
@@ -1111,7 +1111,7 @@
             const startIndex = (page - 1) * ITEMS_PER_PAGE;
             const endIndex = startIndex + ITEMS_PER_PAGE;
             const pageMovies = filteredMovies.slice(startIndex, endIndex);
-            
+
             renderMovies(pageMovies);
         }
 
