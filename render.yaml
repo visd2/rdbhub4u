@@ -1,0 +1,26 @@
+# render.yaml
+# This file tells Render how to build and run your RDBHUB application.
+# Place it in the root directory of your repository.
+
+services:
+  # A web service that will run your Node.js server
+  - type: web
+    name: rdbhub-server
+    # Set the environment to 'node'
+    env: node
+    # You can choose a plan like 'free' or 'starter'
+    plan: free
+    # Command to install dependencies before starting the server
+    buildCommand: "npm install"
+    # Command to start the application
+    startCommand: "node server.js"
+    healthCheck:
+      # This ensures your server is running correctly
+      path: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        # This will get the value from a secret named 'MONGODB_ATLAS_URI'
+        # that you set in the Render dashboard.
+        fromSecret: MONGODB_ATLAS_URI

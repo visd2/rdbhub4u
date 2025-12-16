@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RDBHuB4u - WebSeries</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1d3a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(10, 14, 39, 0.95);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #ffd700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #0a0e27;
+        }
+
+        /* Hamburger Menu */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            width: 28px;
+            height: 3px;
+            background: #ffffff;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        /* Desktop Navigation */
+        .desktop-nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .desktop-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+        }
+
+        .desktop-nav a:hover,
+        .desktop-nav a.active {
+            color: #ffd700;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #0d1128;
+            padding: 2rem 0;
+            transition: left 0.3s ease;
+            z-index: 999;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-logo {
+            padding: 0 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .sidebar-logo-icon {
+            width: 35px;
+            height: 35px;
+            background: #ffd700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: #0a0e27;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 0.8rem 1.5rem;
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .sidebar-nav a:hover {
+            background: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+        }
+
+        .sidebar-nav a.active {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            border-left: 4px solid #ffd700;
+        }
+
+        /* Categories Dropdown */
+        .categories-section {
+            margin-top: 1rem;
+            padding: 0 1.5rem;
+        }
+
+        .categories-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            color: #ffd700;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .categories-header:hover {
+            opacity: 0.8;
+        }
+
+        .dropdown-arrow {
+            transition: transform 0.3s;
+            font-size: 0.8rem;
+        }
+
+        .dropdown-arrow.open {
+            transform: rotate(180deg);
+        }
+
+        .categories-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding-left: 1rem;
+        }
+
+        .categories-list.open {
+            max-height: 500px;
+        }
+
+        .categories-list a {
+            display: block;
+            padding: 0.7rem 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            border-radius: 5px;
+            margin-bottom: 0.3rem;
+        }
+
+        .categories-list a:hover {
+            background: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+            padding-left: 1.5rem;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            z-index: 998;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: calc(100vh - 400px);
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: #ffd700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .page-icon {
+            font-size: 2.5rem;
+        }
+
+        .category-badge {
+            font-size: 1rem;
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
+            border: 2px solid #ffd700;
+            font-weight: normal;
+        }
+
+        /* Search Bar */
+        .search-container {
+            margin-bottom: 2rem;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 600px;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #ffd700;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .search-bar::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* WebSeries Grid */
+        .series-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 1rem 0;
+        }
+
+        .series-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .series-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .series-poster {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .series-info {
+            padding: 1rem;
+        }
+
+        .series-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .series-category {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: #ffd700;
+            margin-bottom: 0.5rem;
+        }
+
+        .series-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .series-year {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .series-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            grid-column: 1 / -1;
+        }
+
+        /* NEW PAGINATION STYLES */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 3rem;
+            padding: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .pagination-info {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .pagination-btn {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            border: 2px solid #ffd700;
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: rgba(255, 215, 0, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .page-numbers {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .page-number {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .page-number:hover {
+            background: rgba(255, 215, 0, 0.3);
+            color: #ffd700;
+        }
+
+        .page-number.active {
+            background: rgba(255, 215, 0, 0.5);
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: #0b0e13;
+            padding: 50px 0 20px;
+            margin-top: 60px;
+            border-top: 1px solid #151821;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            padding: 0 50px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h3,
+        .footer-section h4 {
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+
+        .footer-section p {
+            color: #999;
+            line-height: 1.6;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
+            color: #999;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: #ffd700;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: #151821;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: #ffd700;
+            color: #0a0e27;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #151821;
+            color: #777;
+            font-size: 14px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 50px 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .series-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .series-poster {
+                height: 300px;
+            }
+            
+            .pagination-container {
+                gap: 0.8rem;
+            }
+            
+            .pagination-btn {
+                padding: 0.5rem 1.2rem;
+                min-width: 100px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+
+            .desktop-nav {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .logo-icon {
+                width: 35px;
+                height: 35px;
+            }
+
+            main {
+                padding: 1rem;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .category-badge {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            .series-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+
+            .series-poster {
+                height: 220px;
+            }
+
+            .series-title {
+                font-size: 1rem;
+            }
+
+            .search-bar {
+                font-size: 0.9rem;
+                padding: 0.8rem 1rem;
+            }
+
+            .footer-content,
+            .footer-bottom {
+                padding: 0 20px;
+            }
+            
+            .pagination-container {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .pagination-info {
+                order: 3;
+                margin-top: 0.5rem;
+            }
+            
+            .page-numbers {
+                order: 2;
+            }
+            
+            .pagination-btn {
+                min-width: 90px;
+                padding: 0.4rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .series-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+            }
+
+            .series-poster {
+                height: 200px;
+            }
+
+            .series-info {
+                padding: 0.8rem;
+            }
+
+            .series-title {
+                font-size: 0.9rem;
+            }
+
+            .series-category {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.6rem;
+            }
+
+            .series-year,
+            .series-rating {
+                font-size: 0.8rem;
+            }
+
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .page-icon {
+                font-size: 1.5rem;
+            }
+
+            .category-badge {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.6rem;
+            }
+            
+            .page-number {
+                width: 35px;
+                height: 35px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .series-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .series-poster {
+                height: 280px;
+            }
+            
+            .page-numbers {
+                gap: 0.3rem;
+            }
+            
+            .page-number {
+                width: 30px;
+                height: 30px;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <div class="logo-icon">▶</div>
+            MoviesHuB4u
+        </div>
+        
+        <div class="menu-toggle" onclick="toggleSidebar()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <nav class="desktop-nav">
+            <a href="index.html">Home</a>
+            <a href="movies.html">Movies</a>
+            <a href="anime.html">Anime</a>
+            <a href="webseries.html" class="active">WebSeries</a>
+        </nav>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">▶</div>
+            RDBHuB4u
+        </div>
+        
+        <ul class="sidebar-nav">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="movies.html">Movies</a></li>
+            <li><a href="anime.html">Anime</a></li>
+            <li><a href="webseries.html" class="active">WebSeries</a></li>
+        </ul>
+
+        <div class="categories-section">
+            <div class="categories-header" onclick="toggleCategories()">
+                <span>Categories</span>
+                <span class="dropdown-arrow" id="dropdownArrow">▼</span>
+            </div>
+            <div class="categories-list" id="categoriesList">
+                <a href="#" onclick="filterCategory('all'); return false;">All Series</a>
+                <a href="#" onclick="filterCategory('Action'); return false;">Action</a>
+                <a href="#" onclick="filterCategory('Comedy'); return false;">Comedy</a>
+                <a href="#" onclick="filterCategory('Romance'); return false;">Romance</a>
+                <a href="#" onclick="filterCategory('Adventure'); return false;">Adventure</a>
+                <a href="#" onclick="filterCategory('Drama'); return false;">Drama</a>
+                <a href="#" onclick="filterCategory('Horror'); return false;">Horror</a>
+                <a href="#" onclick="filterCategory('Crime'); return false;">Crime</a>
+                <a href="#" onclick="filterCategory('Thriller'); return false;">Thriller</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Main Content -->
+    <main>
+        <div class="page-header">
+            <span class="page-icon">📺</span>
+            <h1>Web Series <span class="category-badge" id="categoryBadge" style="display: none;"></span></h1>
+        </div>
+
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="🔍 Search web series..." id="searchInput">
+        </div>
+
+        <div class="series-grid" id="seriesGrid">
+            <div class="loading">Loading web series...</div>
+        </div>
+        
+        <!-- NEW PAGINATION -->
+        <div class="pagination-container" id="paginationContainer">
+            <button class="pagination-btn" id="prevBtn" onclick="changePage(currentPage - 1)" disabled>
+                <i class="fas fa-chevron-left"></i> Previous
+            </button>
+            
+            <div class="page-numbers" id="pageNumbers"></div>
+            
+            <button class="pagination-btn" id="nextBtn" onclick="changePage(currentPage + 1)">
+                Next <i class="fas fa-chevron-right"></i>
+            </button>
+            
+            <div class="pagination-info" id="paginationInfo">
+                Page 1 of 1
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-play-circle"></i> RDBHuB4u</h3>
+                <p>Your ultimate destination for Movies, Anime & WebSeries. Downloading unlimited entertainment anytime, anywhere.</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="movies.html">Movies</a></li>
+                    <li><a href="anime.html">Anime</a></li>
+                    <li><a href="webseries.html">WebSeries</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Categories</h4>
+                <ul>
+                    <li><a href="#" onclick="filterCategory('Action'); return false;">Action</a></li>
+                    <li><a href="#" onclick="filterCategory('Comedy'); return false;">Comedy</a></li>
+                    <li><a href="#" onclick="filterCategory('Romance'); return false;">Romance</a></li>
+                    <li><a href="#" onclick="filterCategory('Adventure'); return false;">Adventure</a></li>
+                    <li><a href="#" onclick="filterCategory('Drama'); return false;">Drama</a></li>
+                    <li><a href="#" onclick="filterCategory('Horror'); return false;">Horror</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+                <p style="margin-top: 20px;">Follow us on social media for latest updates and exclusive content.</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 RDBHuB4u. All rights reserved. Made with ❤️ for entertainment lovers.</p>
+        </div>
+    </footer>
+
+    <script>
+        const API_URL = 'https://rdbhub4u.onrender.com/api';
+        
+        // Pagination variables
+        const ITEMS_PER_PAGE = 10;
+        let currentPage = 1;
+        let totalPages = 1;
+        let filteredSeries = [];
+
+        let allSeries = [];
+        let currentCategory = 'all';
+        let searchTerm = '';
+
+       
+        
+        // Load web series from API
+        async function loadAllMovies() {
+    try {
+        console.log('📡 Fetching movies from API...');
+
+        const response = await fetch(`${API_URL}/webseries`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('✅ API Response:', data);
+
+        if (data.success && Array.isArray(data.contents)) {
+            allMovies = data.contents;
+        } else {
+            allMovies = [];
+            console.warn('⚠️ No movies found in API response');
+        }
+
+    } catch (error) {
+        console.error('❌ Failed to load movies from API:', error.message);
+        allMovies = []; // ❌ no sample fallback
+    }
+
+    filterAndPaginateMovies();
+}
+
+
+        // Filter series based on search and category
+        function filterSeries() {
+            let filtered = [...allSeries];
+
+            if (currentCategory !== 'all') {
+                filtered = filtered.filter(series => 
+                    series.category && series.category.toLowerCase() === currentCategory.toLowerCase()
+                );
+            }
+
+            if (searchTerm) {
+                filtered = filtered.filter(series => 
+                    series.title.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }
+
+            return filtered;
+        }
+
+        // Filter series and update pagination
+        function filterAndPaginateSeries() {
+            filteredSeries = filterSeries();
+            totalPages = Math.ceil(filteredSeries.length / ITEMS_PER_PAGE);
+            currentPage = 1; // Reset to first page on filter
+            
+            updatePagination();
+            loadPageSeries(currentPage);
+        }
+
+        // Update pagination UI
+        function updatePagination() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const pageNumbers = document.getElementById('pageNumbers');
+            const paginationInfo = document.getElementById('paginationInfo');
+            const paginationContainer = document.getElementById('paginationContainer');
+
+            // Show/hide pagination based on total pages
+            if (totalPages <= 1) {
+                paginationContainer.style.display = 'none';
+                return;
+            }
+            
+            paginationContainer.style.display = 'flex';
+
+            // Update button states
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+
+            // Update page numbers
+            pageNumbers.innerHTML = '';
+            
+            // Show max 5 page numbers
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+            
+            // Adjust if we're at the end
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('div');
+                pageBtn.className = `page-number ${i === currentPage ? 'active' : ''}`;
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => changePage(i);
+                pageNumbers.appendChild(pageBtn);
+            }
+
+            // Update info text
+            const startItem = (currentPage - 1) * ITEMS_PER_PAGE + 1;
+            const endItem = Math.min(currentPage * ITEMS_PER_PAGE, filteredSeries.length);
+            paginationInfo.textContent = `Page ${currentPage} of ${totalPages} • Showing ${startItem}-${endItem} of ${filteredSeries.length} series`;
+        }
+
+        // Change current page
+        function changePage(page) {
+            if (page < 1 || page > totalPages) return;
+            
+            currentPage = page;
+            loadPageSeries(currentPage);
+            updatePagination();
+            
+            // Scroll to top of series grid
+            document.getElementById('seriesGrid').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // Load series for specific page
+        function loadPageSeries(page) {
+            const startIndex = (page - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+            const pageSeries = filteredSeries.slice(startIndex, endIndex);
+            
+            renderSeries(pageSeries);
+        }
+
+        // Render series to grid
+        function renderSeries(seriesList) {
+            const grid = document.getElementById('seriesGrid');
+            
+            if (seriesList.length === 0) {
+                grid.innerHTML = '<div class="loading">No web series found</div>';
+                return;
+            }
+
+            grid.innerHTML = seriesList.map(series => `
+                <div class="series-card" onclick="openDetail('${series._id}')">
+                    <img src="${series.image}" alt="${series.title}" class="series-poster" 
+                         onerror="this.src='https://via.placeholder.com/250x350?text=No+Image'">
+                    <div class="series-info">
+                        <span class="series-category">${series.category || 'Series'}</span>
+                        <div class="series-title">${series.title}</div>
+                        <div class="series-details">
+                            <span class="series-year">${series.year || 'N/A'}</span>
+                            <span class="series-rating">⭐ ${series.rating || 'N/A'}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
+        // Toggle categories dropdown
+        function toggleCategories() {
+            document.getElementById('categoriesList').classList.toggle('open');
+            document.getElementById('dropdownArrow').classList.toggle('open');
+        }
+
+        // Filter by category
+        function filterCategory(category) {
+            currentCategory = category;
+            
+            const badge = document.getElementById('categoryBadge');
+            if (category === 'all') {
+                badge.style.display = 'none';
+            } else {
+                badge.style.display = 'inline-block';
+                badge.textContent = '• ' + category;
+            }
+            
+            filterAndPaginateSeries();
+            
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.classList.contains('active')) {
+                toggleSidebar();
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchTerm = e.target.value;
+            filterAndPaginateSeries();
+        });
+
+        // Open detail page
+        function openDetail(id) {
+            window.location.href = `detail.html?id=${id}`;
+        }
+
+        // Initial load
+        loadSeries();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RDBHuB4u - Movies</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1d3a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(10, 14, 39, 0.95);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #ff6b35;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        /* Hamburger Menu */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            width: 28px;
+            height: 3px;
+            background: #ffffff;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        /* Desktop Navigation */
+        .desktop-nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .desktop-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+        }
+
+        .desktop-nav a:hover,
+        .desktop-nav a.active {
+            color: #ff6b35;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #0d1128;
+            padding: 2rem 0;
+            transition: left 0.3s ease;
+            z-index: 999;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-logo {
+            padding: 0 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+
+        .sidebar-logo-icon {
+            width: 35px;
+            height: 35px;
+            background: #ff6b35;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 0.8rem 1.5rem;
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .sidebar-nav a:hover {
+            background: rgba(255, 107, 53, 0.1);
+            color: #ff6b35;
+        }
+
+        .sidebar-nav a.active {
+            background: rgba(255, 107, 53, 0.2);
+            color: #ff6b35;
+            border-left: 4px solid #ff6b35;
+        }
+
+        /* Categories Dropdown */
+        .categories-section {
+            margin-top: 1rem;
+            padding: 0 1.5rem;
+        }
+
+        .categories-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            color: #ff6b35;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .categories-header:hover {
+            opacity: 0.8;
+        }
+
+        .dropdown-arrow {
+            transition: transform 0.3s;
+            font-size: 0.8rem;
+        }
+
+        .dropdown-arrow.open {
+            transform: rotate(180deg);
+        }
+
+        .categories-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding-left: 1rem;
+        }
+
+        .categories-list.open {
+            max-height: 500px;
+        }
+
+        .categories-list a {
+            display: block;
+            padding: 0.7rem 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            border-radius: 5px;
+            margin-bottom: 0.3rem;
+        }
+
+        .categories-list a:hover {
+            background: rgba(255, 107, 53, 0.1);
+            color: #ff6b35;
+            padding-left: 1.5rem;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            z-index: 998;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: calc(100vh - 400px);
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: #ff6b35;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .page-icon {
+            font-size: 2.5rem;
+        }
+
+        .category-badge {
+            font-size: 1rem;
+            background: rgba(255, 107, 53, 0.2);
+            color: #ff6b35;
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
+            border: 2px solid #ff6b35;
+            font-weight: normal;
+        }
+
+        /* Search Bar */
+        .search-container {
+            margin-bottom: 2rem;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 600px;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #ff6b35;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .search-bar::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Movies Grid */
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 1rem 0;
+        }
+
+        .movie-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .movie-info {
+            padding: 1rem;
+        }
+
+        .movie-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .movie-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffffff;
+            flex: 1;
+            margin-right: 0.5rem;
+        }
+
+        .movie-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .movie-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .movie-category-badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            background: rgba(255, 107, 53, 0.2);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: #ff6b35;
+        }
+
+        .movie-year-badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: #ffd700;
+        }
+
+        /* Description */
+        .movie-description {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.4;
+            margin-bottom: 0.8rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Meta Info (Language & Quality) */
+        .movie-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .meta-label {
+            color: rgba(255, 255, 255, 0.5);
+            min-width: 70px;
+        }
+
+        .meta-value {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+        }
+
+        .language-tag {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .quality-tag {
+            background: rgba(156, 39, 176, 0.2);
+            color: #ce93d8;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .quality-tag.hd {
+            background: rgba(33, 150, 243, 0.2);
+            color: #64b5f6;
+        }
+
+        .quality-tag.fhd {
+            background: rgba(255, 152, 0, 0.2);
+            color: #ffb74d;
+        }
+
+        .quality-tag.uhd {
+            background: rgba(244, 67, 54, 0.2);
+            color: #ef5350;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            grid-column: 1 / -1;
+        }
+
+        /* NEW PAGINATION STYLES */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 3rem;
+            padding: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .pagination-info {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .pagination-btn {
+            background: rgba(255, 107, 53, 0.2);
+            color: #ff6b35;
+            border: 2px solid #ff6b35;
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: rgba(255, 107, 53, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .page-numbers {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .page-number {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .page-number:hover {
+            background: rgba(255, 107, 53, 0.3);
+            color: #ff6b35;
+        }
+
+        .page-number.active {
+            background: rgba(255, 107, 53, 0.5);
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: #0b0e13;
+            padding: 50px 0 20px;
+            margin-top: 60px;
+            border-top: 1px solid #151821;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            padding: 0 50px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h3,
+        .footer-section h4 {
+            color: #ff6b35;
+            margin-bottom: 15px;
+        }
+
+        .footer-section p {
+            color: #999;
+            line-height: 1.6;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
+            color: #999;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: #ff6b35;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: #151821;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: #ff6b35;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #151821;
+            color: #777;
+            font-size: 14px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 50px 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .movie-poster {
+                height: 300px;
+            }
+            
+            .pagination-container {
+                gap: 0.8rem;
+            }
+            
+            .pagination-btn {
+                padding: 0.5rem 1.2rem;
+                min-width: 100px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+
+            .desktop-nav {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .logo-icon {
+                width: 35px;
+                height: 35px;
+            }
+
+            main {
+                padding: 1rem;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .category-badge {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 1rem;
+            }
+
+            .movie-poster {
+                height: 220px;
+            }
+
+            .movie-title {
+                font-size: 0.95rem;
+            }
+
+            .movie-description {
+                font-size: 0.75rem;
+                -webkit-line-clamp: 2;
+            }
+
+            .search-bar {
+                font-size: 0.9rem;
+                padding: 0.8rem 1rem;
+            }
+
+            .footer-content,
+            .footer-bottom {
+                padding: 0 20px;
+            }
+
+            .meta-item {
+                font-size: 0.7rem;
+            }
+
+            .meta-label {
+                min-width: 60px;
+            }
+            
+            .pagination-container {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .pagination-info {
+                order: 3;
+                margin-top: 0.5rem;
+            }
+            
+            .page-numbers {
+                order: 2;
+            }
+            
+            .pagination-btn {
+                min-width: 90px;
+                padding: 0.4rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .movies-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+            }
+
+            .movie-poster {
+                height: 180px;
+            }
+
+            .movie-info {
+                padding: 0.7rem;
+            }
+
+            .movie-title {
+                font-size: 0.85rem;
+            }
+
+            .movie-category-badge,
+            .movie-year-badge {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.4rem;
+            }
+
+            .movie-description {
+                font-size: 0.7rem;
+                -webkit-line-clamp: 2;
+            }
+
+            .movie-rating {
+                font-size: 0.75rem;
+            }
+
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .page-icon {
+                font-size: 1.5rem;
+            }
+
+            .category-badge {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.6rem;
+            }
+
+            .language-tag,
+            .quality-tag {
+                font-size: 0.6rem;
+                padding: 0.15rem 0.4rem;
+            }
+
+            .meta-label {
+                min-width: 50px;
+                font-size: 0.65rem;
+            }
+            
+            .page-number {
+                width: 35px;
+                height: 35px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .movies-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .movie-poster {
+                height: 250px;
+            }
+
+            .movie-description {
+                -webkit-line-clamp: 3;
+            }
+            
+            .page-numbers {
+                gap: 0.3rem;
+            }
+            
+            .page-number {
+                width: 30px;
+                height: 30px;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <div class="logo-icon">▶</div>
+           RDBHuB4u
+        </div>
+
+        <div class="menu-toggle" onclick="toggleSidebar()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <nav class="desktop-nav">
+            <a href="index.html">Home</a>
+            <a href="movies.html" class="active">Movies</a>
+            <a href="anime.html">Anime</a>
+            <a href="webseries.html">WebSeries</a>
+        </nav>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">▶</div>
+            RDBHuB4u
+        </div>
+
+        <ul class="sidebar-nav">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="movies.html" class="active">Movies</a></li>
+            <li><a href="anime.html">Anime</a></li>
+            <li><a href="webseries.html">WebSeries</a></li>
+        </ul>
+
+        <div class="categories-section">
+            <div class="categories-header" onclick="toggleCategories()">
+                <span>Categories</span>
+                <span class="dropdown-arrow" id="dropdownArrow">▼</span>
+            </div>
+            <div class="categories-list" id="categoriesList">
+                <a href="#" onclick="filterCategory('all'); return false;">All Movies</a>
+                <a href="#" onclick="filterCategory('Action'); return false;">Action</a>
+                <a href="#" onclick="filterCategory('Comedy'); return false;">Comedy</a>
+                <a href="#" onclick="filterCategory('Romance'); return false;">Romance</a>
+                <a href="#" onclick="filterCategory('Adventure'); return false;">Adventure</a>
+                <a href="#" onclick="filterCategory('Drama'); return false;">Drama</a>
+                <a href="#" onclick="filterCategory('Horror'); return false;">Horror</a>
+                <a href="#" onclick="filterCategory('Crime'); return false;">Crime</a>
+                <a href="#" onclick="filterCategory('Thriller'); return false;">Thriller</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Main Content -->
+    <main>
+        <div class="page-header">
+            <span class="page-icon">🎬</span>
+            <h1>Movies <span class="category-badge" id="categoryBadge" style="display: none;"></span></h1>
+        </div>
+
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="🔍 Search movies..." id="searchInput">
+        </div>
+
+        <div class="movies-grid" id="moviesGrid">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Loading movies...
+            </div>
+        </div>
+        
+        <!-- NEW PAGINATION -->
+        <div class="pagination-container" id="paginationContainer">
+            <button class="pagination-btn" id="prevBtn" onclick="changePage(currentPage - 1)" disabled>
+                <i class="fas fa-chevron-left"></i> Previous
+            </button>
+            
+            <div class="page-numbers" id="pageNumbers"></div>
+            
+            <button class="pagination-btn" id="nextBtn" onclick="changePage(currentPage + 1)">
+                Next <i class="fas fa-chevron-right"></i>
+            </button>
+            
+            <div class="pagination-info" id="paginationInfo">
+                Page 1 of 1
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-play-circle"></i> RDBHuB4u</h3>
+                <p>Your ultimate destination for Movies, Anime & WebSeries. Downloading unlimited entertainment anytime, anywhere.</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="movies.html">Movies</a></li>
+                    <li><a href="anime.html">Anime</a></li>
+                    <li><a href="webseries.html">WebSeries</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Categories</h4>
+                <ul>
+                    <li><a href="#" onclick="filterCategory('Action'); return false;">Action</a></li>
+                    <li><a href="#" onclick="filterCategory('Comedy'); return false;">Comedy</a></li>
+                    <li><a href="#" onclick="filterCategory('Romance'); return false;">Romance</a></li>
+                    <li><a href="#" onclick="filterCategory('Adventure'); return false;">Adventure</a></li>
+                    <li><a href="#" onclick="filterCategory('Drama'); return false;">Drama</a></li>
+                    <li><a href="#" onclick="filterCategory('Horror'); return false;">Horror</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+                <p style="margin-top: 20px;">Follow us on social media for latest updates and exclusive content.</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 RDBHuB4u. All rights reserved. Made with ❤️ for entertainment lovers.</p>
+        </div>
+    </footer>
+
+    <script>
+        // API URL - Change this to your backend URL
+        const API_URL = 'https://rdbhub4u.onrender.com/api';
+
+        // Pagination variables
+        const ITEMS_PER_PAGE = 10;
+        let currentPage = 1;
+        let totalPages = 1;
+        let filteredMovies = [];
+
+        
+        
+        let allMovies = [];
+        let currentCategory = 'all';
+        let searchTerm = '';
+
+        // Load movies from API or use sample data
+       async function loadAllMovies() {
+    try {
+        const response = await fetch(`${API_URL}/movies`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.success && Array.isArray(data.contents)) {
+            allMovies = data.contents;
+        } else {
+            allMovies = [];
+            console.warn('No movies found in API response');
+        }
+
+    } catch (error) {
+        console.error('Failed to load movies from API:', error.message);
+        allMovies = []; // ❌ no sample fallback
+    }
+
+    filterAndPaginateMovies();
+}
+
+
+        // Get quality class for styling
+        function getQualityClass(quality) {
+            const q = quality.toLowerCase();
+            if (q === '4k' || q === 'uhd') return 'uhd';
+            if (q === 'fhd' || q === '1080p') return 'fhd';
+            if (q === 'hd' || q === '720p') return 'hd';
+            return '';
+        }
+
+        // Filter movies based on search and category
+        function filterMovies() {
+            let filtered = [...allMovies];
+
+            // Category filter
+            if (currentCategory !== 'all') {
+                filtered = filtered.filter(movie =>
+                    movie.category && movie.category.toLowerCase() === currentCategory.toLowerCase()
+                );
+            }
+
+            // Search filter
+            if (searchTerm) {
+                const term = searchTerm.toLowerCase();
+                filtered = filtered.filter(movie =>
+                    movie.title.toLowerCase().includes(term) ||
+                    (movie.category && movie.category.toLowerCase().includes(term)) ||
+                    (movie.description && movie.description.toLowerCase().includes(term))
+                );
+            }
+
+            return filtered;
+        }
+
+        // Filter movies and update pagination
+        function filterAndPaginateMovies() {
+            filteredMovies = filterMovies();
+            totalPages = Math.ceil(filteredMovies.length / ITEMS_PER_PAGE);
+            currentPage = 1; // Reset to first page on filter
+            
+            updatePagination();
+            loadPageMovies(currentPage);
+        }
+
+        // Update pagination UI
+        function updatePagination() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const pageNumbers = document.getElementById('pageNumbers');
+            const paginationInfo = document.getElementById('paginationInfo');
+            const paginationContainer = document.getElementById('paginationContainer');
+
+            // Show/hide pagination based on total pages
+            if (totalPages <= 1) {
+                paginationContainer.style.display = 'none';
+                return;
+            }
+            
+            paginationContainer.style.display = 'flex';
+
+            // Update button states
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+
+            // Update page numbers
+            pageNumbers.innerHTML = '';
+            
+            // Show max 5 page numbers
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+            
+            // Adjust if we're at the end
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('div');
+                pageBtn.className = `page-number ${i === currentPage ? 'active' : ''}`;
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => changePage(i);
+                pageNumbers.appendChild(pageBtn);
+            }
+
+            // Update info text
+            const startItem = (currentPage - 1) * ITEMS_PER_PAGE + 1;
+            const endItem = Math.min(currentPage * ITEMS_PER_PAGE, filteredMovies.length);
+            paginationInfo.textContent = `Page ${currentPage} of ${totalPages} • Showing ${startItem}-${endItem} of ${filteredMovies.length} movies`;
+        }
+
+        // Change current page
+        function changePage(page) {
+            if (page < 1 || page > totalPages) return;
+            
+            currentPage = page;
+            loadPageMovies(currentPage);
+            updatePagination();
+            
+            // Scroll to top of movies grid
+            document.getElementById('moviesGrid').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // Load movies for specific page
+        function loadPageMovies(page) {
+            const startIndex = (page - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+            const pageMovies = filteredMovies.slice(startIndex, endIndex);
+            
+            renderMovies(pageMovies);
+        }
+
+        // Render movies to grid
+        function renderMovies(movies) {
+            const grid = document.getElementById('moviesGrid');
+
+            if (movies.length === 0) {
+                grid.innerHTML = '<div class="loading">No movies found</div>';
+                return;
+            }
+
+            grid.innerHTML = movies.map(movie => {
+                // Handle languages array or string
+                const languages = Array.isArray(movie.languages) ? movie.languages :
+                                 (movie.languages ? [movie.languages] : ['English']);
+
+                // Handle quality array or string
+                const qualities = Array.isArray(movie.quality) ? movie.quality :
+                                 (movie.quality ? [movie.quality] : ['HD']);
+
+                // Get image URL
+                const imageUrl = movie.image || movie.poster || 'https://via.placeholder.com/400x600?text=No+Image';
+
+                // Get description
+                const description = movie.description || 'No description available.';
+
+                return `
+                    <div class="movie-card" onclick="openDetail('${movie._id}')">
+                        <img src="${imageUrl}" alt="${movie.title}" class="movie-poster"
+                             onerror="this.src='https://via.placeholder.com/400x600?text=No+Image'">
+                        <div class="movie-info">
+                            <div class="movie-header">
+                                <div class="movie-title">${movie.title}</div>
+                                <span class="movie-rating">⭐ ${movie.rating || 'N/A'}</span>
+                            </div>
+
+                            <div class="movie-badges">
+                                <span class="movie-category-badge">${movie.category || 'General'}</span>
+                                <span class="movie-year-badge">${movie.year || 'N/A'}</span>
+                            </div>
+
+                            <div class="movie-description">${description}</div>
+
+                            <div class="movie-meta">
+                                <div class="meta-item">
+                                    <span class="meta-label">Language:</span>
+                                    <div class="meta-value">
+                                        ${languages.map(lang => `<span class="language-tag">${lang}</span>`).join('')}
+                                    </div>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Quality:</span>
+                                    <div class="meta-value">
+                                        ${qualities.map(q => `<span class="quality-tag ${getQualityClass(q)}">${q}</span>`).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Open detail page
+        function openDetail(id) {
+            window.location.href = `detail.html?id=${id}`;
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
+        // Toggle categories dropdown
+        function toggleCategories() {
+            document.getElementById('categoriesList').classList.toggle('open');
+            document.getElementById('dropdownArrow').classList.toggle('open');
+        }
+
+        // Filter by category
+        function filterCategory(category) {
+            currentCategory = category;
+
+            // Update category badge
+            const badge = document.getElementById('categoryBadge');
+            if (category === 'all') {
+                badge.style.display = 'none';
+            } else {
+                badge.style.display = 'inline-block';
+                badge.textContent = '• ' + category;
+            }
+
+            filterAndPaginateMovies();
+
+            // Close sidebar if open
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.classList.contains('active')) {
+                toggleSidebar();
+            }
+
+            // Scroll to top
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchTerm = e.target.value;
+            filterAndPaginateMovies();
+        });
+
+        // Initial load
+        loadAllMovies();
+    </script>
+</body>
+</html>

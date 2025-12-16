@@ -1,0 +1,2052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RDBHuB4u Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1d29;
+            color: #fff;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .connection-status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-left: 20px;
+        }
+
+        .connection-status.online {
+            background: #4CAF50;
+        }
+
+        .connection-status.offline {
+            background: #f44336;
+        }
+
+        .nav-tabs {
+            background: #252936;
+            padding: 0 40px;
+            display: flex;
+            gap: 10px;
+            border-bottom: 2px solid #333;
+        }
+
+        .tab-btn {
+            padding: 15px 30px;
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #667eea;
+        }
+
+        .tab-btn:hover {
+            color: #667eea;
+        }
+
+        .container {
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: #252936;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+        }
+
+        .stat-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .stat-number {
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .stat-label {
+            color: #999;
+            font-size: 16px;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: #fff;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .search-box {
+            padding: 12px 20px;
+            background: #252936;
+            border: 2px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            width: 300px;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+        }
+
+        .content-card {
+            background: #252936;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .content-img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            background: #333;
+        }
+
+        .content-info {
+            padding: 15px;
+        }
+
+        .content-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .content-meta {
+            font-size: 14px;
+            color: #999;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .content-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .btn-edit {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-delete {
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #252936;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #999;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #999;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: #1a1d29;
+            border: 2px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .success-message {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .error-message {
+            background: #f44336;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .image-preview {
+            margin-top: 10px;
+            max-width: 200px;
+            max-height: 280px;
+            border-radius: 8px;
+            display: none;
+            object-fit: cover;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+        }
+
+        .category-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .category-tag {
+            background: #667eea;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category-tag button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0;
+        }
+
+        .episode-section {
+            background: #1a1d29;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 2px solid #333;
+        }
+
+        .episode-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .quality-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .quality-input {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .quality-input label {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .quality-input input {
+            padding: 8px;
+            font-size: 13px;
+        }
+
+        .add-episode-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .remove-episode-btn {
+            background: #f44336;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .spinner {
+            border: 3px solid #333;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ZIP Download Styles */
+        .zip-download-section {
+            background: #1a1d29;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 2px solid #333;
+        }
+
+        .zip-quality-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .zip-quality-btn {
+            padding: 8px 16px;
+            background: #333;
+            border: none;
+            border-radius: 6px;
+            color: #999;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .zip-quality-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .zip-quality-btn:hover {
+            background: #5568d3;
+            color: white;
+        }
+
+        .zip-option {
+            display: none;
+        }
+
+        .zip-option.active {
+            display: block;
+        }
+
+        .zip-note {
+            color: #999;
+            font-size: 13px;
+            margin-top: 10px;
+            padding: 10px;
+            background: #252936;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+
+        .zip-size-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .zip-size-input input {
+            flex: 1;
+        }
+
+        .zip-size-input select {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>
+            <span class="logo">🎬</span>
+            RDBHuB4u Admin Panel
+            <span class="connection-status" id="connectionStatus">⚡ Checking...</span>
+        </h1>
+    </div>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" data-tab="dashboard">📊 Dashboard</button>
+        <button class="tab-btn" data-tab="add">➕ Add Content</button>
+        <button class="tab-btn" data-tab="manage">📋 Manage Content</button>
+    </div>
+
+    <div class="container">
+        <div class="content-section active" id="dashboard">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🎬</div>
+                    <div class="stat-number" id="moviesCount">0</div>
+                    <div class="stat-label">Movies</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎌</div>
+                    <div class="stat-number" id="animeCount">0</div>
+                    <div class="stat-label">Anime</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">❤</div>
+                    <div class="stat-number" id="webseriesCount">0</div>
+                    <div class="stat-label">WebSeries</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💾</div>
+                    <div class="stat-number" id="totalCount">0</div>
+                    <div class="stat-label">Total Content</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="add">
+            <div class="success-message" id="successMessage"></div>
+            <div class="error-message" id="errorMessage"></div>
+
+            <div class="form-group">
+                <label>Content Type *</label>
+                <select id="contentType">
+                    <option value="movies">Movie</option>
+                    <option value="anime">Anime</option>
+                    <option value="webseries">Web Series</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Title *</label>
+                <input type="text" id="title" placeholder="Enter title" required>
+            </div>
+            <div class="form-group">
+                <label>Image URL *</label>
+                <input type="text" id="imageUrl" placeholder="Paste image URL here" required>
+                <img id="imagePreview" class="image-preview" alt="Preview">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="description" placeholder="Enter description"></textarea>
+            </div>
+            
+            <!-- Category System -->
+            <div class="form-group">
+                <label>Category (Select up to 10)</label>
+                <div class="checkbox-group" id="categoryCheckboxGroup">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat-action" value="Action">
+                        <label for="cat-action">Action</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat-adventure" value="Adventure">
+                        <label for="cat-adventure">Adventure</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat-comedy" value="Comedy">
+                        <label for="cat-comedy">Comedy</label>
+                    </div>
+                     <div class="checkbox-item">
+                        <input type="checkbox" id="cat-comedy" value="Comedy">
+                        <label for="cat-comedy">Crime</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat-drama" value="Drama">
+                        <label for="cat-drama">Drama</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat-fantasy" value="Fantasy">
+                        <label for="cat-fantasy">Fantasy</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat-horror" value="Horror">
+                        <label for="cat-horror">Horror</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat-mystery" value="Mystery">
+                        <label for="cat-mystery">Mystery</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat-romance" value="Romance">
+                        <label for="cat-romance">Romance</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat-scifi" value="Sci-Fi">
+                        <label for="cat-scifi">Sci-Fi</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat-thriller" value="Thriller">
+                        <label for="cat-thriller">Thriller</label>
+                    </div>
+                </div>
+                <div class="category-tags" id="categoryTags">
+                    <small style="color: #999;">No categories selected</small>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Language (Maximum 5) *</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lang-english" value="English">
+                        <label for="lang-english">English</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lang-hindi" value="Hindi">
+                        <label for="lang-hindi">Hindi</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lang-japanese" value="Japanese">
+                        <label for="lang-japanese">Japanese</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lang-korean" value="Korean">
+                        <label for="lang-korean">Korean</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lang-spanish" value="Spanish">
+                        <label for="lang-spanish">Spanish</label>
+                    </div>
+                     <div class="checkbox-item">
+                        <input type="checkbox" id="lang-spanish" value="Spanish">
+                        <label for="lang-spanish">Telegu</label>
+                    
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Year</label>
+                <input type="number" id="year" placeholder="2024">
+            </div>
+            <div class="form-group">
+                <label>Rating</label>
+                <input type="text" id="rating" placeholder="8.5">
+            </div>
+            <div class="form-group">
+                <label>Duration</label>
+                <input type="text" id="duration" placeholder="2h 30m">
+            </div>
+            <div class="form-group">
+                <label>Video URL (Streaming)</label>
+                <input type="text" id="videoUrl" placeholder="Enter video streaming URL">
+            </div>
+
+            <!-- Movie Download Links -->
+            <div id="movieDownloadLinks" style="display: block;">
+                <h3 style="color: #667eea; margin: 20px 0;">Movie Download Links</h3>
+                <div class="quality-inputs">
+                    <div class="quality-input">
+                        <label>480p Download Link</label>
+                        <input type="text" id="download480p" placeholder="https://example.com/movie-480p.mp4">
+                    </div>
+                    <div class="quality-input">
+                        <label>720p Download Link</label>
+                        <input type="text" id="download720p" placeholder="https://example.com/movie-720p.mp4">
+                    </div>
+                    <div class="quality-input">
+                        <label>1080p Download Link</label>
+                        <input type="text" id="download1080p" placeholder="https://example.com/movie-1080p.mp4">
+                    </div>
+                    <div class="quality-input">
+                        <label>4K Download Link</label>
+                        <input type="text" id="download4k" placeholder="https://example.com/movie-4k.mp4">
+                    </div>
+                </div>
+                
+                <!-- Movie ZIP Download Links -->
+                <div class="zip-download-section" id="movieZipSection">
+                    <h4 style="color: #ff9800; margin-bottom: 15px;">🎁 Movie ZIP Download Links (Optional)</h4>
+                    <div class="zip-note">
+                        💡 Provide ZIP file links for complete movie downloads. Users can download the entire movie in ZIP format.
+                    </div>
+                    
+                    <div class="quality-inputs">
+                        <div class="quality-input">
+                            <label>📦 480p ZIP Link</label>
+                            <div class="zip-size-input">
+                                <input type="text" id="zip480p" placeholder="https://example.com/movie-480p.zip">
+                                <input type="text" id="zip480pSize" placeholder="Size" style="width: 100px;">
+                                <select id="zip480pSizeUnit">
+                                    <option value="MB">MB</option>
+                                    <option value="GB">GB</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="quality-input">
+                            <label>📦 720p ZIP Link</label>
+                            <div class="zip-size-input">
+                                <input type="text" id="zip720p" placeholder="https://example.com/movie-720p.zip">
+                                <input type="text" id="zip720pSize" placeholder="Size" style="width: 100px;">
+                                <select id="zip720pSizeUnit">
+                                    <option value="MB">MB</option>
+                                    <option value="GB">GB</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="quality-input">
+                            <label>📦 1080p ZIP Link</label>
+                            <div class="zip-size-input">
+                                <input type="text" id="zip1080p" placeholder="https://example.com/movie-1080p.zip">
+                                <input type="text" id="zip1080pSize" placeholder="Size" style="width: 100px;">
+                                <select id="zip1080pSizeUnit">
+                                    <option value="GB">GB</option>
+                                    <option value="MB">MB</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="quality-input">
+                            <label>📦 4K ZIP Link</label>
+                            <div class="zip-size-input">
+                                <input type="text" id="zip4k" placeholder="https://example.com/movie-4k.zip">
+                                <input type="text" id="zip4kSize" placeholder="Size" style="width: 100px;">
+                                <select id="zip4kSizeUnit">
+                                    <option value="GB">GB</option>
+                                    <option value="MB">MB</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Series Options -->
+            <div id="seriesOptions" style="display: none;">
+                <h3 style="color: #667eea; margin: 20px 0;">Series/Anime Information</h3>
+                <div class="form-group">
+                    <label>Number of Seasons</label>
+                    <input type="number" id="seasons" placeholder="1" value="1" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Total Episodes</label>
+                    <input type="number" id="totalEpisodes" placeholder="12" min="1">
+                </div>
+
+                <h4 style="color: #667eea; margin: 20px 0;">Add Episodes with Download Links</h4>
+                <p style="color: #999; margin-bottom: 15px; font-size: 14px;">Add individual episodes with their download links.</p>
+
+                <div id="episodesContainer"></div>
+                <button class="add-episode-btn" type="button" onclick="addEpisode()">+ Add Episode</button>
+                
+                <!-- Series ZIP Download Links -->
+                <div class="zip-download-section" id="seriesZipSection">
+                    <h4 style="color: #ff9800; margin-bottom: 15px;">🎁 Complete Series ZIP Downloads (Optional)</h4>
+                    <div class="zip-note">
+                        💡 Provide ZIP file links for complete series downloads. Users can download entire seasons in ZIP format.
+                    </div>
+                    
+                    <div class="zip-quality-selector">
+                        <button class="zip-quality-btn active" data-quality="season" onclick="showZipOption('season')">🌿 Season Wise</button>
+                        <button class="zip-quality-btn" data-quality="complete" onclick="showZipOption('complete')">🌳 Complete Series</button>
+                    </div>
+                    
+                    <!-- Season Wise ZIP -->
+                    <div class="zip-option active" id="zipSeasonOption">
+                        <h5 style="color: #4CAF50; margin: 15px 0;">Season Wise ZIP Links</h5>
+                        <div id="seasonZipContainer">
+                            <div class="quality-inputs">
+                                <div class="quality-input">
+                                    <label>📦 Season 1 ZIP (480p)</label>
+                                    <div class="zip-size-input">
+                                        <input type="text" id="season1Zip480p" placeholder="https://example.com/season1-480p.zip">
+                                        <input type="text" id="season1Zip480pSize" placeholder="Size" style="width: 100px;">
+                                        <select id="season1Zip480pSizeUnit">
+                                            <option value="GB">GB</option>
+                                            <option value="MB">MB</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="quality-input">
+                                    <label>📦 Season 1 ZIP (720p)</label>
+                                    <div class="zip-size-input">
+                                        <input type="text" id="season1Zip720p" placeholder="https://example.com/season1-720p.zip">
+                                        <input type="text" id="season1Zip720pSize" placeholder="Size" style="width: 100px;">
+                                        <select id="season1Zip720pSizeUnit">
+                                            <option value="GB">GB</option>
+                                            <option value="MB">MB</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="add-episode-btn" type="button" onclick="addSeasonZip()" style="background: #ff9800;">+ Add More Seasons</button>
+                    </div>
+                    
+                    <!-- Complete Series ZIP -->
+                    <div class="zip-option" id="zipCompleteOption">
+                        <h5 style="color: #4CAF50; margin: 15px 0;">Complete Series ZIP Links</h5>
+                        <div class="quality-inputs">
+                            <div class="quality-input">
+                                <label>📦 Complete Series (480p)</label>
+                                <div class="zip-size-input">
+                                    <input type="text" id="completeZip480p" placeholder="https://example.com/complete-480p.zip">
+                                    <input type="text" id="completeZip480pSize" placeholder="Size" style="width: 100px;">
+                                    <select id="completeZip480pSizeUnit">
+                                        <option value="GB">GB</option>
+                                        <option value="MB">MB</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="quality-input">
+                                <label>📦 Complete Series (720p)</label>
+                                <div class="zip-size-input">
+                                    <input type="text" id="completeZip720p" placeholder="https://example.com/complete-720p.zip">
+                                    <input type="text" id="completeZip720pSize" placeholder="Size" style="width: 100px;">
+                                    <select id="completeZip720pSizeUnit">
+                                        <option value="GB">GB</option>
+                                        <option value="MB">MB</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="quality-input">
+                                <label>📦 Complete Series (1080p)</label>
+                                <div class="zip-size-input">
+                                    <input type="text" id="completeZip1080p" placeholder="https://example.com/complete-1080p.zip">
+                                    <input type="text" id="completeZip1080pSize" placeholder="Size" style="width: 100px;">
+                                    <select id="completeZip1080pSizeUnit">
+                                        <option value="GB">GB</option>
+                                        <option value="MB">MB</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 30px;">
+                <label>
+                    <input type="checkbox" id="featured" style="width: auto; margin-right: 10px;"> Featured Content
+                </label>
+            </div>
+            
+            <button class="btn btn-primary" id="addContentBtn" onclick="addContent()">
+                ➕ Add Content
+            </button>
+        </div>
+
+        <div class="content-section" id="manage">
+            <div class="action-bar">
+                <select id="manageType" onchange="loadContent()">
+                    <option value="movies">Movies</option>
+                    <option value="anime">Anime</option>
+                    <option value="webseries">Web Series</option>
+                </select>
+                <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search content..." oninput="filterContent()">
+            </div>
+            <div id="contentList" class="content-grid">
+                <div class="loading">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Content</h2>
+                <button class="close-btn" onclick="closeEditModal()">&times;</button>
+            </div>
+            <div id="editForm">
+                <!-- Edit form will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://rdbhub4u.onrender.com/api';
+        let allContent = [];
+        let selectedCategories = [];
+        let episodeCounter = 0;
+        let isServerOnline = false;
+        let seasonZipCounter = 1;
+
+        // Server Connection Check
+        async function checkServerConnection() {
+            const statusEl = document.getElementById('connectionStatus');
+            try {
+                const response = await fetch(`${API_URL}/stats`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    isServerOnline = true;
+                    statusEl.textContent = '🟢 Server Online';
+                    statusEl.className = 'connection-status online';
+                    return true;
+                } else {
+                    throw new Error('Server response not OK');
+                }
+            } catch (error) {
+                isServerOnline = false;
+                statusEl.textContent = '🔴 Server Offline';
+                statusEl.className = 'connection-status offline';
+                console.error('Server connection error:', error);
+                return false;
+            }
+        }
+
+        // Image Preview
+        document.getElementById('imageUrl').addEventListener('input', function() {
+            const preview = document.getElementById('imagePreview');
+            const url = this.value.trim();
+            if (url) {
+                preview.src = url;
+                preview.style.display = 'block';
+                preview.onerror = function() {
+                    preview.style.display = 'none';
+                    preview.src = '';
+                };
+            } else {
+                preview.style.display = 'none';
+                preview.src = '';
+            }
+        });
+
+        // Category System
+        function initCategorySystem() {
+            const checkboxes = document.querySelectorAll('#categoryCheckboxGroup input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const checkedBoxes = document.querySelectorAll('#categoryCheckboxGroup input[type="checkbox"]:checked');
+                    
+                    if (checkedBoxes.length > 10) {
+                        this.checked = false;
+                        showMessage('Maximum 10 categories allowed', 'error');
+                        return;
+                    }
+                    
+                    selectedCategories = Array.from(checkedBoxes).map(cb => cb.value);
+                    updateCategoryTags();
+                });
+            });
+        }
+
+        function updateCategoryTags() {
+            const container = document.getElementById('categoryTags');
+            if (selectedCategories.length === 0) {
+                container.innerHTML = '<small style="color: #999;">No categories selected</small>';
+                return;
+            }
+            container.innerHTML = selectedCategories.map(cat => `
+                <div class="category-tag">
+                    ${cat}
+                    <button type="button" onclick="removeCategory('${cat}')">&times;</button>
+                </div>
+            `).join('');
+        }
+
+        function removeCategory(category) {
+            selectedCategories = selectedCategories.filter(c => c !== category);
+            const checkbox = document.querySelector(`#categoryCheckboxGroup input[value="${category}"]`);
+            if (checkbox) {
+                checkbox.checked = false;
+            }
+            updateCategoryTags();
+        }
+
+        // Language Selection
+        document.querySelectorAll('input[type="checkbox"][id^="lang-"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const checked = document.querySelectorAll('input[type="checkbox"][id^="lang-"]:checked');
+                if (checked.length > 5) {
+                    this.checked = false;
+                    showMessage('Maximum 5 languages allowed', 'error');
+                }
+            });
+        });
+
+        // Tab Navigation
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.tab).classList.add('active');
+                if (btn.dataset.tab === 'dashboard') {
+                    loadStats();
+                } else if (btn.dataset.tab === 'manage') {
+                    loadContent();
+                }
+            });
+        });
+
+        // Content Type Change
+        document.getElementById('contentType').addEventListener('change', function() {
+            const type = this.value;
+            const movieLinks = document.getElementById('movieDownloadLinks');
+            const seriesOptions = document.getElementById('seriesOptions');
+            if (type === 'movies') {
+                movieLinks.style.display = 'block';
+                seriesOptions.style.display = 'none';
+            } else {
+                movieLinks.style.display = 'none';
+                seriesOptions.style.display = 'block';
+            }
+        });
+
+        // ZIP Quality Selector
+        function showZipOption(quality) {
+            // Hide all options
+            document.querySelectorAll('.zip-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            
+            // Show selected option
+            document.getElementById(`zip${quality.charAt(0).toUpperCase() + quality.slice(1)}Option`).classList.add('active');
+            
+            // Update button states
+            document.querySelectorAll('.zip-quality-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Add Season ZIP Section
+        function addSeasonZip() {
+            seasonZipCounter++;
+            const container = document.getElementById('seasonZipContainer');
+            const seasonHtml = `
+                <div class="quality-inputs" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #333;">
+                    <div class="quality-input">
+                        <label>📦 Season ${seasonZipCounter} ZIP (480p)</label>
+                        <div class="zip-size-input">
+                            <input type="text" id="season${seasonZipCounter}Zip480p" placeholder="https://example.com/season${seasonZipCounter}-480p.zip">
+                            <input type="text" id="season${seasonZipCounter}Zip480pSize" placeholder="Size" style="width: 100px;">
+                            <select id="season${seasonZipCounter}Zip480pSizeUnit">
+                                <option value="GB">GB</option>
+                                <option value="MB">MB</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="quality-input">
+                        <label>📦 Season ${seasonZipCounter} ZIP (720p)</label>
+                        <div class="zip-size-input">
+                            <input type="text" id="season${seasonZipCounter}Zip720p" placeholder="https://example.com/season${seasonZipCounter}-720p.zip">
+                            <input type="text" id="season${seasonZipCounter}Zip720pSize" placeholder="Size" style="width: 100px;">
+                            <select id="season${seasonZipCounter}Zip720pSizeUnit">
+                                <option value="GB">GB</option>
+                                <option value="MB">MB</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="remove-episode-btn" type="button" onclick="removeSeasonZip(${seasonZipCounter})" style="margin-top: 10px;">Remove Season ${seasonZipCounter}</button>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', seasonHtml);
+        }
+
+        function removeSeasonZip(seasonNum) {
+            const seasonElement = document.querySelector(`[id^="season${seasonNum}Zip"]`).closest('.quality-inputs');
+            if (seasonElement) {
+                seasonElement.remove();
+            }
+        }
+
+        // Episode Management
+        function addEpisode() {
+            episodeCounter++;
+            const container = document.getElementById('episodesContainer');
+            const episodeHtml = `
+                <div class="episode-section" id="episode-${episodeCounter}">
+                    <div class="episode-header">
+                        <h4 style="color: #667eea;">Episode ${episodeCounter}</h4>
+                        <button class="remove-episode-btn" type="button" onclick="removeEpisode(${episodeCounter})">✕ Remove</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Episode Number *</label>
+                        <input type="number" id="ep${episodeCounter}-number" value="${episodeCounter}" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Episode Title</label>
+                        <input type="text" id="ep${episodeCounter}-title" placeholder="Enter episode title">
+                    </div>
+                    <div class="quality-inputs">
+                        <div class="quality-input">
+                            <label>📥 Download Link (480p)</label>
+                            <input type="text" id="ep${episodeCounter}-480p" placeholder="https://example.com/ep${episodeCounter}.mp4">
+                        </div>
+                        <div class="quality-input">
+                            <label>📥 Download Link (720p)</label>
+                            <input type="text" id="ep${episodeCounter}-720p" placeholder="https://example.com/ep${episodeCounter}-720p.mp4">
+                        </div>
+                        <div class="quality-input">
+                            <label>📥 Episode ZIP (480p) - Optional</label>
+                            <div class="zip-size-input">
+                                <input type="text" id="ep${episodeCounter}-zip480p" placeholder="https://example.com/ep${episodeCounter}-480p.zip">
+                                <input type="text" id="ep${episodeCounter}-zip480pSize" placeholder="Size" style="width: 80px;">
+                                <select id="ep${episodeCounter}-zip480pSizeUnit" style="width: 70px;">
+                                    <option value="MB">MB</option>
+                                    <option value="GB">GB</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="quality-input">
+                            <label>📥 Episode ZIP (720p) - Optional</label>
+                            <div class="zip-size-input">
+                                <input type="text" id="ep${episodeCounter}-zip720p" placeholder="https://example.com/ep${episodeCounter}-720p.zip">
+                                <input type="text" id="ep${episodeCounter}-zip720pSize" placeholder="Size" style="width: 80px;">
+                                <select id="ep${episodeCounter}-zip720pSizeUnit" style="width: 70px;">
+                                    <option value="MB">MB</option>
+                                    <option value="GB">GB</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', episodeHtml);
+        }
+
+        function removeEpisode(id) {
+            const element = document.getElementById(`episode-${id}`);
+            if (element) {
+                element.remove();
+            }
+        }
+
+        function getEpisodesData() {
+            const episodes = [];
+            const container = document.getElementById('episodesContainer');
+            const episodeSections = container.querySelectorAll('.episode-section');
+            
+            episodeSections.forEach(section => {
+                const id = section.id.split('-')[1];
+                const epNumber = document.getElementById(`ep${id}-number`)?.value;
+                const epTitle = document.getElementById(`ep${id}-title`)?.value;
+                const download = {};
+                const zipDownload = {};
+                
+                // Get regular download links
+                const link480p = document.getElementById(`ep${id}-480p`)?.value?.trim();
+                const link720p = document.getElementById(`ep${id}-720p`)?.value?.trim();
+                
+                if (link480p) download['480p'] = link480p;
+                if (link720p) download['720p'] = link720p;
+                
+                // Get ZIP download links with size
+                const zip480p = document.getElementById(`ep${id}-zip480p`)?.value?.trim();
+                const zip480pSize = document.getElementById(`ep${id}-zip480pSize`)?.value?.trim();
+                const zip480pUnit = document.getElementById(`ep${id}-zip480pSizeUnit`)?.value;
+                
+                const zip720p = document.getElementById(`ep${id}-zip720p`)?.value?.trim();
+                const zip720pSize = document.getElementById(`ep${id}-zip720pSize`)?.value?.trim();
+                const zip720pUnit = document.getElementById(`ep${id}-zip720pSizeUnit`)?.value;
+                
+                if (zip480p) {
+                    zipDownload['480p'] = {
+                        link: zip480p,
+                        size: zip480pSize ? `${zip480pSize} ${zip480pUnit}` : null
+                    };
+                }
+                if (zip720p) {
+                    zipDownload['720p'] = {
+                        link: zip720p,
+                        size: zip720pSize ? `${zip720pSize} ${zip720pUnit}` : null
+                    };
+                }
+                
+                episodes.push({
+                    episodeNumber: parseInt(epNumber) || episodes.length + 1,
+                    title: epTitle || `Episode ${epNumber || episodes.length + 1}`,
+                    download: download,
+                    zipDownload: Object.keys(zipDownload).length > 0 ? zipDownload : undefined
+                });
+            });
+            
+            return episodes;
+        }
+
+        // Message Display
+        function showMessage(message, type = 'success') {
+            const messageEl = document.getElementById(type === 'success' ? 'successMessage' : 'errorMessage');
+            messageEl.textContent = message;
+            messageEl.style.display = 'block';
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 5000);
+        }
+
+        // Get Selected Languages
+        function getSelectedLanguages() {
+            const languages = [];
+            document.querySelectorAll('input[type="checkbox"][id^="lang-"]:checked').forEach(checkbox => {
+                languages.push(checkbox.value);
+            });
+            return languages;
+        }
+
+        // Get Movie ZIP Data
+        function getMovieZipData() {
+            const zipData = {};
+            const qualities = ['480p', '720p', '1080p', '4k'];
+            
+            qualities.forEach(quality => {
+                const link = document.getElementById(`zip${quality}`)?.value?.trim();
+                const size = document.getElementById(`zip${quality}Size`)?.value?.trim();
+                const unit = document.getElementById(`zip${quality}SizeUnit`)?.value;
+                
+                if (link) {
+                    zipData[quality] = {
+                        link: link,
+                        size: size ? `${size} ${unit}` : null
+                    };
+                }
+            });
+            
+            return Object.keys(zipData).length > 0 ? zipData : undefined;
+        }
+
+        // Get Series ZIP Data
+        function getSeriesZipData() {
+            const zipData = {
+                seasonWise: {},
+                completeSeries: {}
+            };
+            
+            // Get season wise ZIP links
+            for (let i = 1; i <= seasonZipCounter; i++) {
+                const seasonData = {};
+                const qualities = ['480p', '720p'];
+                
+                qualities.forEach(quality => {
+                    const link = document.getElementById(`season${i}Zip${quality}`)?.value?.trim();
+                    const size = document.getElementById(`season${i}Zip${quality}Size`)?.value?.trim();
+                    const unit = document.getElementById(`season${i}Zip${quality}SizeUnit`)?.value;
+                    
+                    if (link) {
+                        seasonData[quality] = {
+                            link: link,
+                            size: size ? `${size} ${unit}` : null
+                        };
+                    }
+                });
+                
+                if (Object.keys(seasonData).length > 0) {
+                    zipData.seasonWise[`season${i}`] = seasonData;
+                }
+            }
+            
+            // Get complete series ZIP links
+            const completeQualities = ['480p', '720p', '1080p'];
+            completeQualities.forEach(quality => {
+                const link = document.getElementById(`completeZip${quality}`)?.value?.trim();
+                const size = document.getElementById(`completeZip${quality}Size`)?.value?.trim();
+                const unit = document.getElementById(`completeZip${quality}SizeUnit`)?.value;
+                
+                if (link) {
+                    zipData.completeSeries[quality] = {
+                        link: link,
+                        size: size ? `${size} ${unit}` : null
+                    };
+                }
+            });
+            
+            return Object.keys(zipData.seasonWise).length > 0 || Object.keys(zipData.completeSeries).length > 0 ? zipData : undefined;
+        }
+
+        // Load Stats
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_URL}/stats`, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch stats');
+                }
+                
+                const stats = await response.json();
+                document.getElementById('moviesCount').textContent = stats.movies || 0;
+                document.getElementById('animeCount').textContent = stats.anime || 0;
+                document.getElementById('webseriesCount').textContent = stats.webseries || 0;
+                document.getElementById('totalCount').textContent = stats.totalContent || 0;
+                
+            } catch (error) {
+                console.error('Error loading stats:', error);
+                document.getElementById('moviesCount').textContent = '—';
+                document.getElementById('animeCount').textContent = '—';
+                document.getElementById('webseriesCount').textContent = '—';
+                document.getElementById('totalCount').textContent = '—';
+            }
+        }
+
+        // ADD CONTENT
+        async function addContent() {
+            const addBtn = document.getElementById('addContentBtn');
+            
+            // Check server connection
+            if (!isServerOnline) {
+                const isOnline = await checkServerConnection();
+                if (!isOnline) {
+                    showMessage('❌ Server is offline! Please start your backend server first.', 'error');
+                    return;
+                }
+            }
+            
+            const type = document.getElementById('contentType').value;
+            const title = document.getElementById('title').value.trim();
+            const image = document.getElementById('imageUrl').value.trim();
+            
+            // Basic validation
+            if (!title) {
+                showMessage('⚠ Please enter title', 'error');
+                return;
+            }
+            
+            if (!image) {
+                showMessage('⚠ Please enter image URL', 'error');
+                return;
+            }
+            
+            const languages = getSelectedLanguages();
+            if (languages.length === 0) {
+                showMessage('⚠ Please select at least one language', 'error');
+                return;
+            }
+            
+            // Show loading state
+            addBtn.disabled = true;
+            addBtn.innerHTML = '⏳ Adding Content<span class="spinner"></span>';
+            
+            // Prepare data object
+            const data = {
+                title: title,
+                image: image,
+                description: document.getElementById('description').value.trim() || '',
+                category: selectedCategories.length > 0 ? selectedCategories.join(', ') : 'General',
+                year: document.getElementById('year').value ? parseInt(document.getElementById('year').value) : new Date().getFullYear(),
+                rating: document.getElementById('rating').value.trim() || '0.0',
+                duration: document.getElementById('duration').value.trim() || '',
+                videoUrl: document.getElementById('videoUrl').value.trim() || '',
+                featured: document.getElementById('featured').checked || false,
+                language: languages
+            };
+            
+            // Handle movie specific data
+            if (type === 'movies') {
+                const downloadLinks = {};
+                ['480p', '720p', '1080p', '4k'].forEach(quality => {
+                    const link = document.getElementById(`download${quality}`).value.trim();
+                    if (link) {
+                        downloadLinks[quality] = link;
+                    }
+                });
+                
+                if (Object.keys(downloadLinks).length > 0) {
+                    data.download = downloadLinks;
+                }
+                
+                // Add quality array
+                const qualities = [];
+                if (data.download) {
+                    qualities.push(...Object.keys(data.download));
+                }
+                data.quality = qualities.length > 0 ? qualities : ['480p', '720p'];
+                
+                // Add ZIP download data for movies
+                const zipData = getMovieZipData();
+                if (zipData) {
+                    data.zipDownload = zipData;
+                }
+            }
+            // Handle anime/webseries
+            else {
+                data.seasons = parseInt(document.getElementById('seasons').value) || 1;
+                data.totalEpisodes = parseInt(document.getElementById('totalEpisodes').value) || 1;
+                
+                const episodes = getEpisodesData();
+                if (episodes.length === 0) {
+                    addBtn.disabled = false;
+                    addBtn.innerHTML = '➕ Add Content';
+                    showMessage('⚠ Please add at least one episode with download links', 'error');
+                    return;
+                }
+                
+                data.episodes = episodes;
+                
+                // Get all qualities from episodes
+                const allQualities = new Set();
+                episodes.forEach(ep => {
+                    Object.keys(ep.download || {}).forEach(q => allQualities.add(q));
+                });
+                data.quality = Array.from(allQualities);
+                if (data.quality.length === 0) {
+                    data.quality = ['480p', '720p'];
+                }
+                
+                // Add ZIP download data for series
+                const zipData = getSeriesZipData();
+                if (zipData) {
+                    data.zipDownload = zipData;
+                }
+            }
+            
+            console.log('Sending data to:', `${API_URL}/${type}`);
+            console.log('Data:', JSON.stringify(data, null, 2));
+            
+            try {
+                const response = await fetch(`${API_URL}/${type}`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                console.log('Response status:', response.status);
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('Success:', result);
+                    
+                    showMessage(`✅ ${type === 'movies' ? 'Movie' : type.charAt(0).toUpperCase() + type.slice(1)} "${title}" added successfully!`, 'success');
+                    
+                    // Reset form
+                    resetForm(type);
+                    
+                    // Update stats
+                    loadStats();
+                    
+                } else {
+                    let errorMsg = 'Failed to add content';
+                    try {
+                        const errorData = await response.json();
+                        errorMsg = errorData.error || errorData.message || errorMsg;
+                    } catch (e) {
+                        errorMsg = `Server error: ${response.status}`;
+                    }
+                    
+                    showMessage(`❌ Error: ${errorMsg}`, 'error');
+                }
+                
+            } catch (error) {
+                console.error('Network error:', error);
+                showMessage(`❌ Network error: ${error.message}`, 'error');
+            } finally {
+                // Re-enable button
+                addBtn.disabled = false;
+                addBtn.innerHTML = '➕ Add Content';
+            }
+        }
+
+        // Reset form
+        function resetForm(type) {
+            // Common fields
+            document.getElementById('title').value = '';
+            document.getElementById('imageUrl').value = '';
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('description').value = '';
+            document.getElementById('year').value = '';
+            document.getElementById('rating').value = '';
+            document.getElementById('duration').value = '';
+            document.getElementById('videoUrl').value = '';
+            document.getElementById('featured').checked = false;
+            
+            // Reset categories
+            selectedCategories = [];
+            document.querySelectorAll('#categoryCheckboxGroup input[type="checkbox"]').forEach(cb => cb.checked = false);
+            updateCategoryTags();
+            
+            // Reset languages
+            document.querySelectorAll('input[type="checkbox"][id^="lang-"]').forEach(cb => cb.checked = false);
+            
+            // Reset season ZIP counter
+            seasonZipCounter = 1;
+            
+            // Type specific reset
+            if (type === 'movies') {
+                // Reset regular download links
+                ['480p', '720p', '1080p', '4k'].forEach(quality => {
+                    document.getElementById(`download${quality}`).value = '';
+                });
+                
+                // Reset ZIP download links
+                ['480p', '720p', '1080p', '4k'].forEach(quality => {
+                    document.getElementById(`zip${quality}`).value = '';
+                    document.getElementById(`zip${quality}Size`).value = '';
+                    document.getElementById(`zip${quality}SizeUnit`).value = 'MB';
+                });
+            } else {
+                document.getElementById('seasons').value = '1';
+                document.getElementById('totalEpisodes').value = '';
+                document.getElementById('episodesContainer').innerHTML = '';
+                episodeCounter = 0;
+                
+                // Reset series ZIP sections
+                document.getElementById('seasonZipContainer').innerHTML = `
+                    <div class="quality-inputs">
+                        <div class="quality-input">
+                            <label>📦 Season 1 ZIP (480p)</label>
+                            <div class="zip-size-input">
+                                <input type="text" id="season1Zip480p" placeholder="https://example.com/season1-480p.zip">
+                                <input type="text" id="season1Zip480pSize" placeholder="Size" style="width: 100px;">
+                                <select id="season1Zip480pSizeUnit">
+                                    <option value="GB">GB</option>
+                                    <option value="MB">MB</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="quality-input">
+                            <label>📦 Season 1 ZIP (720p)</label>
+                            <div class="zip-size-input">
+                                <input type="text" id="season1Zip720p" placeholder="https://example.com/season1-720p.zip">
+                                <input type="text" id="season1Zip720pSize" placeholder="Size" style="width: 100px;">
+                                <select id="season1Zip720pSizeUnit">
+                                    <option value="GB">GB</option>
+                                    <option value="MB">MB</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Reset complete series ZIP
+                ['480p', '720p', '1080p'].forEach(quality => {
+                    document.getElementById(`completeZip${quality}`).value = '';
+                    document.getElementById(`completeZip${quality}Size`).value = '';
+                    document.getElementById(`completeZip${quality}SizeUnit`).value = 'GB';
+                });
+            }
+        }
+
+        // Load Content
+        async function loadContent() {
+            const type = document.getElementById('manageType').value;
+            const contentList = document.getElementById('contentList');
+            contentList.innerHTML = '<div class="loading">Loading...</div>';
+            
+            try {
+                const response = await fetch(`${API_URL}/${type}`, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch ${type}`);
+                }
+                
+                const result = await response.json();
+                if (result.success && result[type]) {
+                    allContent = result[type]; // Access the array using the 'type' key (e.g., result.movies)
+                    displayContent(allContent);
+                } else {
+                    throw new Error(result.error || `Could not find '${type}' in API response`);
+                }
+                
+            } catch (error) {
+                console.error(`Error loading ${type}:`, error);
+                contentList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⚠</div>
+                        <div>Error loading ${type}. Check server connection.</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Display Content
+        function displayContent(content) {
+            const contentList = document.getElementById('contentList');
+            
+            if (!content || content.length === 0) {
+                contentList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📦</div>
+                        <div>No content found</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            contentList.innerHTML = content.map(item => `
+                <div class="content-card" data-id="${item._id}">
+                    <img src="${item.image}" alt="${item.title}" class="content-img" 
+                         onerror="this.src='https://via.placeholder.com/200x280?text=No+Image'">
+                    <div class="content-info">
+                        <div class="content-title" title="${item.title}">${item.title}</div>
+                        <div class="content-meta">
+                            <span>${item.year || 'N/A'}</span>
+                            <span>⭐ ${item.rating || 'N/A'}</span>
+                            ${item.zipDownload ? '<span style="color: #ff9800;">📦 ZIP</span>' : ''}
+                        </div>
+                        <div class="content-actions">
+                            <button class="btn btn-small btn-edit" onclick="openEditModal('${item._id}', '${document.getElementById('manageType').value}')">
+                                ✏ Edit
+                            </button>
+                            <button class="btn btn-small btn-delete" onclick="deleteContent('${item._id}', '${document.getElementById('manageType').value}')">
+                                🗑 Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter Content
+        function filterContent() {
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            const filtered = allContent.filter(item =>
+                item.title.toLowerCase().includes(searchTerm) ||
+                (item.category && item.category.toLowerCase().includes(searchTerm)) ||
+                (item.description && item.description.toLowerCase().includes(searchTerm))
+            );
+            displayContent(filtered);
+        }
+
+        // Open Edit Modal
+        async function openEditModal(id, type) {
+            try {
+                const response = await fetch(`${API_URL}/${type}/${id}`);
+                if (!response.ok) throw new Error('Failed to fetch item');
+                
+                const item = await response.json();
+                
+                let zipSection = '';
+                if (type === 'movies' && item.zipDownload) {
+                    zipSection = `
+                        <div id="editMovieZipSection">
+                            <h3 style="color: #ff9800; margin: 20px 0;">🎁 Movie ZIP Download Links</h3>
+                            <div class="quality-inputs">
+                                ${['480p', '720p', '1080p', '4k'].map(quality => `
+                                    <div class="quality-input">
+                                        <label>📦 ${quality} ZIP Link</label>
+                                        <div class="zip-size-input">
+                                            <input type="text" id="editZip${quality}" value="${item.zipDownload[quality]?.link || ''}">
+                                            <input type="text" id="editZip${quality}Size" value="${item.zipDownload[quality]?.size?.split(' ')[0] || ''}" placeholder="Size" style="width: 100px;">
+                                            <select id="editZip${quality}SizeUnit" style="width: 80px;">
+                                                <option value="MB" ${item.zipDownload[quality]?.size?.includes('MB') ? 'selected' : ''}>MB</option>
+                                                <option value="GB" ${item.zipDownload[quality]?.size?.includes('GB') ? 'selected' : ''}>GB</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                const modalContent = `
+                    <div class="modal-header">
+                        <h2>Edit ${type === 'movies' ? 'Movie' : type}</h2>
+                        <button class="close-btn" onclick="closeEditModal()">&times;</button>
+                    </div>
+                    <input type="hidden" id="editId" value="${item._id}">
+                    <input type="hidden" id="editType" value="${type}">
+                    
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" id="editTitle" value="${item.title || ''}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Image URL *</label>
+                        <input type="text" id="editImageUrl" value="${item.image || ''}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="editDescription">${item.description || ''}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <input type="text" id="editCategory" value="${item.category || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>Year</label>
+                        <input type="number" id="editYear" value="${item.year || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>Rating</label>
+                        <input type="text" id="editRating" value="${item.rating || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>Duration</label>
+                        <input type="text" id="editDuration" value="${item.duration || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>Video URL</label>
+                        <input type="text" id="editVideoUrl" value="${item.videoUrl || ''}">
+                    </div>
+                    
+                    ${type === 'movies' ? `
+                    <div id="editMovieDownloadLinks">
+                        <h3 style="color: #667eea; margin: 20px 0;">Download Links</h3>
+                        <div class="quality-inputs">
+                            <div class="quality-input">
+                                <label>480p Download Link</label>
+                                <input type="text" id="editDownload480p" value="${item.download?.['480p'] || ''}">
+                            </div>
+                            <div class="quality-input">
+                                <label>720p Download Link</label>
+                                <input type="text" id="editDownload720p" value="${item.download?.['720p'] || ''}">
+                            </div>
+                            <div class="quality-input">
+                                <label>1080p Download Link</label>
+                                <input type="text" id="editDownload1080p" value="${item.download?.['1080p'] || ''}">
+                            </div>
+                            <div class="quality-input">
+                                <label>4K Download Link</label>
+                                <input type="text" id="editDownload4k" value="${item.download?.['4k'] || ''}">
+                            </div>
+                        </div>
+                    </div>
+                    ${zipSection}
+                    ` : ''}
+                    
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label>
+                            <input type="checkbox" id="editFeatured" ${item.featured ? 'checked' : ''} style="width: auto; margin-right: 10px;">
+                            Featured Content
+                        </label>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="updateContent()">
+                        💾 Save Changes
+                    </button>
+                `;
+                
+                document.getElementById('editForm').innerHTML = modalContent;
+                document.getElementById('editModal').classList.add('active');
+                
+            } catch (error) {
+                console.error('Error opening edit modal:', error);
+                showMessage('❌ Error loading item details', 'error');
+            }
+        }
+
+        // Close Edit Modal
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+
+        // Update Content
+        async function updateContent() {
+            const id = document.getElementById('editId').value;
+            const type = document.getElementById('editType').value;
+            
+            const data = {
+                title: document.getElementById('editTitle').value.trim(),
+                image: document.getElementById('editImageUrl').value.trim(),
+                description: document.getElementById('editDescription').value.trim(),
+                category: document.getElementById('editCategory').value.trim(),
+                year: document.getElementById('editYear').value ? parseInt(document.getElementById('editYear').value) : null,
+                rating: document.getElementById('editRating').value.trim(),
+                duration: document.getElementById('editDuration').value.trim(),
+                videoUrl: document.getElementById('editVideoUrl').value.trim(),
+                featured: document.getElementById('editFeatured').checked
+            };
+            
+            // Add download links for movies
+            if (type === 'movies') {
+                const downloadLinks = {};
+                ['480p', '720p', '1080p', '4k'].forEach(quality => {
+                    const link = document.getElementById(`editDownload${quality}`).value.trim();
+                    if (link) downloadLinks[quality] = link;
+                });
+                
+                if (Object.keys(downloadLinks).length > 0) {
+                    data.download = downloadLinks;
+                    data.quality = Object.keys(downloadLinks);
+                }
+                
+                // Add ZIP download links for movies
+                const zipData = {};
+                ['480p', '720p', '1080p', '4k'].forEach(quality => {
+                    const link = document.getElementById(`editZip${quality}`)?.value?.trim();
+                    const size = document.getElementById(`editZip${quality}Size`)?.value?.trim();
+                    const unit = document.getElementById(`editZip${quality}SizeUnit`)?.value;
+                    
+                    if (link) {
+                        zipData[quality] = {
+                            link: link,
+                            size: size ? `${size} ${unit}` : null
+                        };
+                    }
+                });
+                
+                if (Object.keys(zipData).length > 0) {
+                    data.zipDownload = zipData;
+                }
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/${type}/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    showMessage('✅ Content updated successfully!', 'success');
+                    closeEditModal();
+                    loadContent();
+                    loadStats();
+                } else {
+                    const errorData = await response.json();
+                    showMessage(`❌ Error: ${errorData.error || 'Failed to update'}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error updating content:', error);
+                showMessage('❌ Error updating content', 'error');
+            }
+        }
+
+        // Delete Content
+        async function deleteContent(id, type) {
+            if (!confirm('Are you sure you want to delete this content?')) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/${type}/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    showMessage('✅ Content deleted successfully!', 'success');
+                    loadContent();
+                    loadStats();
+                } else {
+                    showMessage('❌ Failed to delete content', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting content:', error);
+                showMessage('❌ Error deleting content', 'error');
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', async function() {
+            await checkServerConnection();
+            loadStats();
+            initCategorySystem();
+            
+            // Auto-fill test data button for Movie
+            const testBtnMovie = document.createElement('button');
+            testBtnMovie.className = 'btn';
+            testBtnMovie.style.background = '#ff9800';
+            testBtnMovie.style.marginLeft = '10px';
+            testBtnMovie.innerHTML = '🎬 Test Movie';
+            testBtnMovie.onclick = function() {
+                document.getElementById('contentType').value = 'movies';
+                document.getElementById('title').value = 'Avengers: Endgame';
+                document.getElementById('imageUrl').value = 'https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_FMjpg_UX1000_.jpg';
+                document.getElementById('description').value = 'After the devastating events of Avengers: Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos actions and restore balance to the universe.';
+                document.getElementById('year').value = '2019';
+                document.getElementById('rating').value = '8.4';
+                document.getElementById('duration').value = '3h 2m';
+                document.getElementById('download480p').value = 'https://example.com/avengers-480p.mp4';
+                document.getElementById('download720p').value = 'https://example.com/avengers-720p.mp4';
+                document.getElementById('zip480p').value = 'https://example.com/avengers-480p.zip';
+                document.getElementById('zip480pSize').value = '1.5';
+                document.getElementById('zip480pSizeUnit').value = 'GB';
+                document.getElementById('zip720p').value = 'https://example.com/avengers-720p.zip';
+                document.getElementById('zip720pSize').value = '3.2';
+                document.getElementById('zip720pSizeUnit').value = 'GB';
+                document.querySelector('#lang-english').checked = true;
+                document.querySelector('#cat-action').checked = true;
+                document.querySelector('#cat-scifi').checked = true;
+                updateCategoryTags();
+                
+                // Show movie section
+                document.getElementById('movieDownloadLinks').style.display = 'block';
+                document.getElementById('seriesOptions').style.display = 'none';
+                
+                // Trigger image preview
+                document.getElementById('imageUrl').dispatchEvent(new Event('input'));
+            };
+            
+            // Auto-fill test data button for Anime
+            const testBtnAnime = document.createElement('button');
+            testBtnAnime.className = 'btn';
+            testBtnAnime.style.background = '#9c27b0';
+            testBtnAnime.style.marginLeft = '10px';
+            testBtnAnime.innerHTML = '🎌 Test Anime';
+            testBtnAnime.onclick = function() {
+                document.getElementById('contentType').value = 'anime';
+                document.getElementById('title').value = 'Attack on Titan';
+                document.getElementById('imageUrl').value = 'https://m.media-amazon.com/images/M/MV5BMTY5ODk1NzUyMl5BMl5BanBnXkFtZTgwMjUyNzEyMTE@._V1_FMjpg_UX1000_.jpg';
+                document.getElementById('description').value = 'After his hometown is destroyed and his mother is killed, young Eren Jaeger vows to cleanse the earth of the giant humanoid Titans that have brought humanity to the brink of extinction.';
+                document.getElementById('year').value = '2013';
+                document.getElementById('rating').value = '9.0';
+                document.getElementById('duration').value = '24m per episode';
+                document.getElementById('seasons').value = '4';
+                document.getElementById('totalEpisodes').value = '75';
+                document.getElementById('season1Zip480p').value = 'https://example.com/aot-season1-480p.zip';
+                document.getElementById('season1Zip480pSize').value = '5.8';
+                document.getElementById('season1Zip480pSizeUnit').value = 'GB';
+                document.getElementById('completeZip480p').value = 'https://example.com/aot-complete-480p.zip';
+                document.getElementById('completeZip480pSize').value = '25';
+                document.getElementById('completeZip480pSizeUnit').value = 'GB';
+                document.querySelector('#lang-japanese').checked = true;
+                document.querySelector('#cat-action').checked = true;
+                document.querySelector('#cat-drama').checked = true;
+                document.querySelector('#cat-fantasy').checked = true;
+                updateCategoryTags();
+                
+                // Show series section
+                document.getElementById('movieDownloadLinks').style.display = 'none';
+                document.getElementById('seriesOptions').style.display = 'block';
+                
+                // Add sample episodes
+                addEpisode();
+                document.getElementById('ep1-480p').value = 'https://example.com/aot-ep1-480p.mp4';
+                document.getElementById('ep1-720p').value = 'https://example.com/aot-ep1-720p.mp4';
+                document.getElementById('ep1-zip480p').value = 'https://example.com/aot-ep1-480p.zip';
+                document.getElementById('ep1-zip480pSize').value = '350';
+                document.getElementById('ep1-zip480pSizeUnit').value = 'MB';
+                
+                // Trigger image preview
+                document.getElementById('imageUrl').dispatchEvent(new Event('input'));
+            };
+            
+            const addBtn = document.getElementById('addContentBtn');
+            addBtn.parentNode.insertBefore(testBtnAnime, addBtn);
+            addBtn.parentNode.insertBefore(testBtnMovie, testBtnAnime);
+        });
+    </script>
+</body>
+</html>

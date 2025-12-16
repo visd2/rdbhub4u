@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories - StreamHub</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0d0f15;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* NAVBAR FIXED */
+        .navbar {
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            background: rgba(11, 14, 19, 0.95);
+            padding: 18px 0;
+            border-bottom: 1px solid #151821;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav_container {
+            max-width: 1400px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 50px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #e50914;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo:hover {
+            color: #ff1f2f;
+        }
+
+        /* LINKS */
+        .nav_links {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav_links li {
+            position: relative;
+        }
+
+        .nav_links li a {
+            text-decoration: none;
+            color: #d0d0d0;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav_links li a:hover,
+        .nav_links li a.active {
+            color: #e50914;
+        }
+
+        /* DROPDOWN */
+        .dropdown {
+            cursor: pointer;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu {
+            display: none;
+            opacity: 0;
+            visibility: hidden;
+            position: absolute;
+            top: 35px;
+            left: 0;
+            background: #151821;
+            padding: 10px 0;
+            border-radius: 8px;
+            min-width: 180px;
+            border: 1px solid #222;
+            z-index: 200;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .dropdown-menu li {
+            padding: 0;
+        }
+
+        .dropdown-menu li a {
+            display: block;
+            padding: 10px 20px;
+            color: white;
+        }
+
+        .dropdown-menu li a:hover {
+            background: #e50914;
+        }
+
+        /* PAGE WRAPPER */
+        .page-container {
+            max-width: 1400px;
+            margin: auto;
+            padding: 120px 50px 50px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .page-header i {
+            font-size: 40px;
+            color: #e50914;
+        }
+
+        .page-header h1 {
+            font-size: 42px;
+            font-weight: bold;
+        }
+
+        /* GRID */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: #11141d;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(229, 9, 20, 0.3);
+        }
+
+        .card-img {
+            height: 320px;
+            position: relative;
+        }
+
+        .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e50914;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .card-info {
+            padding: 15px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #facc15;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .year {
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* Loading & Empty */
+        .loading,
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            grid-column: 1 / -1;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .page-btn {
+            padding: 10px 20px;
+            background: #151821;
+            border: 2px solid #2a3154;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            border: none;
+        }
+
+        .page-btn:hover,
+        .page-btn.active {
+            background: #e50914;
+            border-color: #e50914;
+            color: #fff;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-btn:disabled:hover {
+            background: #151821;
+            color: #fff;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: #0b0e13;
+            padding: 50px 0 20px;
+            margin-top: 60px;
+            border-top: 1px solid #151821;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            padding: 0 50px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h3,
+        .footer-section h4 {
+            color: #e50914;
+            margin-bottom: 15px;
+        }
+
+        .footer-section p {
+            color: #999;
+            line-height: 1.6;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
+            color: #999;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: #e50914;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: #151821;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: #e50914;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #151821;
+            color: #777;
+            font-size: 14px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 50px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .nav_container {
+                padding: 0 20px;
+            }
+
+            .page-container {
+                padding: 100px 20px 30px;
+            }
+
+            .page-header h1 {
+                font-size: 32px;
+            }
+
+            .content-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 20px;
+            }
+
+            .card-img {
+                height: 220px;
+            }
+
+            .footer-content,
+            .footer-bottom {
+                padding: 0 20px;
+            }
+
+            .pagination {
+                gap: 5px;
+            }
+
+            .page-btn {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav_container">
+            <a class="logo" href="index.html">
+                <i class="fas fa-play-circle"></i>
+                <span>StreamHub</span>
+            </a>
+
+            <ul class="nav_links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="movies.html">Movies</a></li>
+                <li><a href="anime.html">Anime</a></li>
+                <li><a href="webseries.html">WebSeries</a></li>
+
+                <li class="dropdown">
+                    <a class="active">Categories <i class="fas fa-angle-down"></i></a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="category.html?cat=action">Action</a></li>
+                        <li><a href="category.html?cat=comedy">Comedy</a></li>
+                        <li><a href="category.html?cat=romance">Romance</a></li>
+                        <li><a href="category.html?cat=adventure">Adventure</a></li>
+                        <li><a href="category.html?cat=drama">Drama</a></li>
+                        <li><a href="category.html?cat=horror">Horror</a></li>
+                        <li><a href="category.html?cat=thriller">Thriller</a></li>
+                        <li><a href="category.html?cat=crime">Crime</a></li>
+                        <li><a href="category.html?cat=sci-fi">Sci-Fi</a></li>
+                        <li><a href="category.html?cat=fantasy">Fantasy</a></li>
+                        <li><a href="category.html?cat=superhero">Superhero</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- CONTENT -->
+    <div class="page-container">
+        <div class="page-header">
+            <i class="fas fa-layer-group"></i>
+            <h1 id="catTitle">Categories</h1>
+        </div>
+
+        <div class="content-grid" id="contentGrid">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin" style="font-size: 40px; margin-bottom: 20px;"></i>
+                <p>Loading content...</p>
+            </div>
+        </div>
+
+        <div class="pagination" id="pagination"></div>
+    </div>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-content">
+
+            <div class="footer-section">
+                <h3><i class="fas fa-play-circle"></i> StreamHub</h3>
+                <p>Your ultimate destination for Movies, Anime & WebSeries</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="movies.html">Movies</a></li>
+                    <li><a href="anime.html">Anime</a></li>
+                    <li><a href="webseries.html">WebSeries</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Categories</h4>
+                <ul>
+                    <li><a href="category.html?cat=action">Action</a></li>
+                    <li><a href="category.html?cat=comedy">Comedy</a></li>
+                    <li><a href="category.html?cat=romance">Romance</a></li>
+                    <li><a href="category.html?cat=adventure">Adventure</a></li>
+                    <li><a href="category.html?cat=drama">Drama</a></li>
+                    <li><a href="category.html?cat=horror">Horror</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 StreamHub. All rights reserved.</p>
+        </div>
+    </footer>
+
+
+    <script>
+        const API_URL = "https://rdbhub4u.onrender.com/api";
+        let allContent = [];
+        let currentPage = 1;
+        const contentPerPage = 12;
+
+        // Get Category from URL
+        function getCat() {
+            let p = new URLSearchParams(location.search);
+            return p.get("cat") || "action";
+        }
+
+        // Set Page Title
+        function setTitle(cat) {
+            cat = cat.charAt(0).toUpperCase() + cat.slice(1);
+            document.getElementById("catTitle").textContent = cat;
+        }
+
+        // ✅ FIXED: Load Category Content with Regex Search
+        async function loadData() {
+            const cat = getCat();
+            setTitle(cat);
+
+            try {
+                // Fetch ALL content first
+                let res = await fetch(`${API_URL}/content`);
+                let data = await res.json();
+
+                if (!data.success) {
+                    throw new Error('API request failed');
+                }
+
+                // ✅ FIXED: Filter by category using case-insensitive partial match
+                // This works with "Action, Sci-Fi" format
+                const searchCat = cat.toLowerCase();
+                allContent = data.contents.filter(item => {
+                    if (!item.category) return false;
+                    const itemCategories = item.category.toLowerCase();
+                    // Check if the search category is found in the item's categories
+                    return itemCategories.includes(searchCat);
+                });
+
+                console.log(`Found ${allContent.length} items for category: ${cat}`);
+
+                if (allContent.length === 0) {
+                    document.getElementById("contentGrid").innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">📦</div>
+                            <h3>No content found in "${cat}" category</h3>
+                            <p style="margin-top: 10px; color: #999;">Try another category from the menu</p>
+                        </div>`;
+                    document.getElementById('pagination').innerHTML = '';
+                    return;
+                }
+
+                displayContentWithPagination();
+            } catch (error) {
+                console.error('Error loading content:', error);
+                document.getElementById("contentGrid").innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">⚠️</div>
+                        <h3>Error loading content</h3>
+                        <p style="margin-top: 10px; color: #999;">Please check your server connection</p>
+                    </div>`;
+                document.getElementById('pagination').innerHTML = '';
+            }
+        }
+
+        // Display Content with Pagination
+        function displayContentWithPagination() {
+            const startIndex = (currentPage - 1) * contentPerPage;
+            const endIndex = startIndex + contentPerPage;
+            const contentToDisplay = allContent.slice(startIndex, endIndex);
+
+            renderContent(contentToDisplay);
+            updatePagination();
+        }
+
+        // Render Content Cards
+        function renderContent(list) {
+            let g = document.getElementById("contentGrid");
+            
+            if (list.length === 0) {
+                g.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🔍</div>
+                        <h3>No content found</h3>
+                    </div>`;
+                return;
+            }
+
+            g.innerHTML = list.map(i => `
+                <div class="card" onclick="location.href='detail.html?id=${i._id}'">
+                    <div class="card-img">
+                        <img src="${i.image}" alt="${i.title}" 
+                             onerror="this.src='https://via.placeholder.com/220x320?text=No+Image'">
+                        <span class="tag">${i.type}</span>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-title">${i.title}</div>
+                        <div class="rating">
+                            <i class="fa fa-star"></i> ${i.rating || 'N/A'}
+                        </div>
+                        <div class="year">${i.year || 'N/A'}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update Pagination
+        function updatePagination() {
+            const totalPages = Math.ceil(allContent.length / contentPerPage);
+            const pagination = document.getElementById('pagination');
+
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let html = `
+                <button class="page-btn" onclick="changePage(${currentPage - 1})" 
+                ${currentPage === 1 ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-left"></i> Prev
+                </button>
+            `;
+
+            // Show max 10 page numbers
+            const startPage = Math.max(1, currentPage - 4);
+            const endPage = Math.min(totalPages, startPage + 9);
+
+            if (startPage > 1) {
+                html += `<button class="page-btn" onclick="changePage(1)">1</button>`;
+                if (startPage > 2) {
+                    html += `<span style="color: #999; padding: 10px;">...</span>`;
+                }
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                html += `
+                    <button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">
+                        ${i}
+                    </button>
+                `;
+            }
+
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    html += `<span style="color: #999; padding: 10px;">...</span>`;
+                }
+                html += `<button class="page-btn" onclick="changePage(${totalPages})">${totalPages}</button>`;
+            }
+
+            html += `
+                <button class="page-btn" onclick="changePage(${currentPage + 1})" 
+                ${currentPage === totalPages ? 'disabled' : ''}>
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            `;
+
+            pagination.innerHTML = html;
+        }
+
+        // Change Page
+        function changePage(page) {
+            const totalPages = Math.ceil(allContent.length / contentPerPage);
+            if (page < 1 || page > totalPages) return;
+
+            currentPage = page;
+            displayContentWithPagination();
+            
+            // Scroll to top
+            document.querySelector('.page-container').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        }
+
+        // Initialize
+        loadData();
+    </script>
+
+</body>
+
+</html>

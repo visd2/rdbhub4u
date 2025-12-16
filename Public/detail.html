@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rdbhub4u - Content Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e27;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(10, 14, 39, 0.95);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff0080;
+            text-decoration: none;
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav a:hover {
+            color: #ff0080;
+        }
+
+        /* Detail Container */
+        .detail-container {
+            margin-top: 80px;
+            padding: 40px 50px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Close Button */
+        .close-btn {
+            position: fixed;
+            top: 90px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: #ff0080;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 101;
+            transition: all 0.3s;
+            font-size: 24px;
+            color: white;
+            border: none;
+        }
+
+        .close-btn:hover {
+            background: #e6006f;
+            transform: rotate(90deg);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            height: 500px;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .hero-backdrop {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.4);
+        }
+
+        .hero-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 40px;
+            background: linear-gradient(to top, rgba(10,14,39,1), transparent);
+        }
+
+        .content-title {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .content-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .badge {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .badge-anime {
+            background: #00d4ff;
+            color: #000;
+        }
+
+        .badge-movie {
+            background: #ff0080;
+            color: #fff;
+        }
+
+        .badge-webseries {
+            background: #ffd700;
+            color: #000;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 16px;
+        }
+
+        .rating {
+            color: #ffd700;
+        }
+
+        .views {
+            color: #999;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .poster-section {
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+
+        .poster-img {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .info-section {
+            background: #151932;
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        .section-title {
+            color: #ff0080;
+            font-size: 24px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .description {
+            color: #ccc;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            background: #0a0e27;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #ff0080;
+        }
+
+        .info-label {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Languages & Quality */
+        .tags-container {
+            margin-bottom: 30px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            padding: 8px 16px;
+            background: #1e2442;
+            border-radius: 20px;
+            font-size: 14px;
+            border: 2px solid #2a3154;
+        }
+
+        /* Download Section */
+        .download-section {
+            background: #151932;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .quality-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .quality-btn {
+            padding: 12px 30px;
+            background: #1e2442;
+            border: 2px solid #2a3154;
+            border-radius: 25px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .quality-btn:hover,
+        .quality-btn.active {
+            background: #ff0080;
+            border-color: #ff0080;
+            transform: translateY(-2px);
+        }
+
+        .download-box {
+            background: linear-gradient(135deg, #1e2442 0%, #2a3154 100%);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #ff0080;
+            display: none;
+        }
+
+        .download-box.active {
+            display: block;
+        }
+
+        .download-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .download-quality {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff0080;
+        }
+
+        .download-size {
+            color: #999;
+        }
+
+        .download-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ff0080 0%, #ff4081 100%);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 0, 128, 0.5);
+        }
+
+        /* Episodes Section (for Series/Anime) */
+        .episodes-section {
+            background: #151932;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .season-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .season-btn {
+            padding: 10px 20px;
+            background: #1e2442;
+            border: 2px solid #2a3154;
+            border-radius: 20px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .season-btn:hover,
+        .season-btn.active {
+            background: #00d4ff;
+            border-color: #00d4ff;
+            color: #000;
+        }
+
+        .episodes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .episode-card {
+            background: #1e2442;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #2a3154;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .episode-card:hover {
+            border-color: #00d4ff;
+            transform: translateY(-3px);
+        }
+
+        .episode-number {
+            color: #00d4ff;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .episode-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .episode-download {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .episode-quality-btn {
+            padding: 6px 12px;
+            background: #ff0080;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .episode-quality-btn:hover {
+            background: #e6006f;
+        }
+
+        .batch-download {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff0080 0%, #ff4081 100%);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .batch-download h3 {
+            margin-bottom: 15px;
+        }
+
+        .batch-btns {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .batch-btn {
+            padding: 12px 25px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid #fff;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .batch-btn:hover {
+            background: #fff;
+            color: #ff0080;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .poster-section {
+                position: static;
+            }
+
+            .header {
+                padding: 15px 20px;
+            }
+
+            .detail-container {
+                padding: 20px;
+            }
+
+            .content-title {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .episodes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quality-selector {
+                flex-direction: column;
+            }
+
+            .quality-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <a href="/" class="logo">🎬 RDBHuB4u</a>
+        <nav class="nav">
+            <a href="/">Home</a>
+            <a href="/movies.html">Movies</a>
+            <a href="/anime.html">Anime</a>
+            <a href="/webseries.html">Web Series</a>
+        </nav>
+    </div>
+
+    <!-- Close Button -->
+    <button class="close-btn" onclick="window.history.back()">✕</button>
+
+    <!-- Detail Container -->
+    <div class="detail-container" id="detailContainer">
+        <!-- Content will be loaded here -->
+        <div style="text-align: center; padding: 100px 20px; color: #999;">
+            <h2>Loading...</h2>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://rdbhub4u.onrender.com/api';
+        
+        // Get content ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const contentId = urlParams.get('id');
+
+        if (contentId) {
+            loadContentDetails(contentId);
+        } else {
+            document.getElementById('detailContainer').innerHTML = `
+                <div style="text-align: center; padding: 100px 20px; color: #999;">
+                    <h2>Content not found</h2>
+                </div>
+            `;
+        }
+
+        async function loadContentDetails(id) {
+            try {
+                const response = await fetch(`${API_URL}/content/${id}`);
+                const data = await response.json();
+
+                if (data.success && data.content) {
+                    displayContentDetails(data.content);
+                } else {
+                    throw new Error('Content not found');
+                }
+            } catch (error) {
+                console.error('Error loading content:', error);
+                document.getElementById('detailContainer').innerHTML = `
+                    <div style="text-align: center; padding: 100px 20px; color: #999;">
+                        <h2>Error loading content</h2>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function displayContentDetails(content) {
+            const isAnime = content.type === 'anime';
+            const isWebSeries = content.type === 'webseries';
+            const isSeries = isAnime || isWebSeries;
+
+            const badgeClass = content.type === 'anime' ? 'badge-anime' : 
+                               content.type === 'webseries' ? 'badge-webseries' : 'badge-movie';
+            const badgeText = content.type.toUpperCase();
+
+            document.getElementById('detailContainer').innerHTML = `
+                <!-- Hero Section -->
+                <div class="hero-section">
+                    <img src="${content.image}" alt="${content.title}" class="hero-backdrop">
+                    <div class="hero-content">
+                        <h1 class="content-title">${content.title}</h1>
+                        <div class="content-meta">
+                            <span class="badge ${badgeClass}">${badgeText}</span>
+                            ${content.category ? `<span class="meta-item">${content.category}</span>` : ''}
+                            ${content.year ? `<span class="meta-item">${content.year}</span>` : ''}
+                            ${content.rating ? `<span class="meta-item rating">⭐ ${content.rating}</span>` : ''}
+                            <span class="meta-item views">👁 ${(content.views || 0).toLocaleString()} views</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="main-content">
+                    <!-- Poster Section -->
+                    <div class="poster-section">
+                        <img src="${content.image}" alt="${content.title}" class="poster-img">
+                    </div>
+
+                    <!-- Info Section -->
+                    <div class="info-section">
+                        <h2 class="section-title">Description</h2>
+                        <p class="description">${content.description || 'No description available.'}</p>
+
+                        <!-- Info Grid -->
+                        <div class="info-grid">
+                            ${content.year ? `
+                            <div class="info-item">
+                                <div class="info-label">Release Year</div>
+                                <div class="info-value">${content.year}</div>
+                            </div>` : ''}
+                            ${content.duration ? `
+                            <div class="info-item">
+                                <div class="info-label">Duration</div>
+                                <div class="info-value">${content.duration}</div>
+                            </div>` : ''}
+                            ${content.category ? `
+                            <div class="info-item">
+                                <div class="info-label">Genre</div>
+                                <div class="info-value">${content.category}</div>
+                            </div>` : ''}
+                            ${content.rating ? `
+                            <div class="info-item">
+                                <div class="info-label">Rating</div>
+                                <div class="info-value">⭐ ${content.rating}/10</div>
+                            </div>` : ''}
+                        </div>
+
+                        <!-- Languages -->
+                        ${content.language && content.language.length > 0 ? `
+                        <div class="tags-container">
+                            <h3 class="section-title">Available Languages</h3>
+                            <div class="tags">
+                                ${content.language.map(lang => `<span class="tag">${lang}</span>`).join('')}
+                            </div>
+                        </div>` : ''}
+
+                        <!-- Quality -->
+                        ${content.quality && content.quality.length > 0 ? `
+                        <div class="tags-container">
+                            <h3 class="section-title">Available Quality</h3>
+                            <div class="tags">
+                                ${content.quality.map(q => `<span class="tag">${q}</span>`).join('')}
+                            </div>
+                        </div>` : ''}
+                    </div>
+                </div>
+
+                ${isSeries ? generateEpisodesSection(content) : generateDownloadSection(content)}
+            `;
+
+            // Initialize quality selector if not series
+            if (!isSeries) {
+                initializeQualitySelector();
+            }
+        }
+
+        function generateDownloadSection(content) {
+            const qualities = content.quality || ['480p', '720p', '1080p'];
+            const download = content.download || {};
+
+            return `
+                <div class="download-section">
+                    <h2 class="section-title">📥 Download Link Ready</h2>
+                    
+                    <div class="quality-selector">
+                        ${qualities.map((q, index) => `
+                            <button class="quality-btn ${index === 0 ? 'active' : ''}" 
+                                    data-quality="${q}" 
+                                    onclick="selectQuality('${q}')">
+                                ${q.toUpperCase()}
+                            </button>
+                        `).join('')}
+                    </div>
+
+                    ${qualities.map((q, index) => {
+                        const downloadLink = download[q] || '';
+                        return `
+                            <div class="download-box ${index === 0 ? 'active' : ''}" id="download-${q}">
+                                <div class="download-info">
+                                    <span class="download-quality">${q} Quality</span>
+                                    <span class="download-size">${getFileSize(q)}</span>
+                                </div>
+                                <button class="download-btn" onclick="${downloadLink ? `window.open('${downloadLink}', '_blank')` : `alert('Download link not available')`}">
+                                    <span>⬇</span>
+                                    <span>Download Now</span>
+                                </button>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        function generateEpisodesSection(content) {
+            const totalEpisodes = content.totalEpisodes || 12;
+            const seasons = content.seasons || 1;
+            const qualities = content.quality || ['480p', '720p', '1080p'];
+            const episodes = content.episodes || [];
+
+            let episodesHTML = '';
+            
+            // If no episodes data, generate placeholder
+            if (episodes.length === 0) {
+                for (let i = 1; i <= totalEpisodes; i++) {
+                    episodesHTML += `
+                        <div class="episode-card">
+                            <div class="episode-number">Episode ${i}</div>
+                            <div class="episode-title">${content.title} - EP ${i}</div>
+                            <div class="episode-download">
+                                ${qualities.map(q => `
+                                    <button class="episode-quality-btn" onclick="downloadEpisode(${i}, '${q}')">
+                                        ${q}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            } else {
+                // Use actual episode data
+                episodes.forEach(ep => {
+                    episodesHTML += `
+                        <div class="episode-card">
+                            <div class="episode-number">Episode ${ep.episodeNumber}</div>
+                            <div class="episode-title">${ep.title || content.title + ' - EP ' + ep.episodeNumber}</div>
+                            ${ep.duration ? `<div style="color: #999; font-size: 12px; margin-bottom: 10px;">⏱ ${ep.duration}</div>` : ''}
+                            <div class="episode-download">
+                                ${Object.keys(ep.download || {}).map(q => `
+                                    <button class="episode-quality-btn" onclick="window.open('${ep.download[q]}', '_blank')">
+                                        ${q}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Get batch download links
+            const batchDownload = content.batchDownload || {};
+
+            return `
+                <div class="episodes-section">
+                    <h2 class="section-title">📺 Episodes</h2>
+                    
+                    ${seasons > 1 ? `
+                    <div class="season-selector">
+                        ${Array.from({length: seasons}, (_, i) => `
+                            <button class="season-btn ${i === 0 ? 'active' : ''}" 
+                                    onclick="selectSeason(${i + 1})">
+                                Season ${i + 1}
+                            </button>
+                        `).join('')}
+                    </div>
+                    ` : ''}
+
+                    <div class="episodes-grid">
+                        ${episodesHTML}
+                    </div>
+
+                    <!-- Batch Download -->
+                    ${Object.keys(batchDownload).length > 0 || totalEpisodes > 0 ? `
+                    <div class="batch-download">
+                        <h3>📦 Download Complete ${content.type === 'anime' ? 'Anime' : 'Series'} (ZIP)</h3>
+                        <div class="batch-btns">
+                            ${Object.keys(batchDownload).length > 0 ? 
+                                Object.keys(batchDownload).map(q => `
+                                    <button class="batch-btn" onclick="window.open('${batchDownload[q]}', '_blank')">
+                                        Download All Episodes (${q})
+                                    </button>
+                                `).join('') :
+                                qualities.map(q => `
+                                    <button class="batch-btn" onclick="batchDownload('${q}')">
+                                        Download All Episodes (${q})
+                                    </button>
+                                `).join('')
+                            }
+                        </div>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function selectQuality(quality) {
+            // Update active button
+            document.querySelectorAll('.quality-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-quality="${quality}"]`).classList.add('active');
+
+            // Update active download box
+            document.querySelectorAll('.download-box').forEach(box => {
+                box.classList.remove('active');
+            });
+            document.getElementById(`download-${quality}`).classList.add('active');
+        }
+
+        function initializeQualitySelector() {
+            const firstBtn = document.querySelector('.quality-btn');
+            if (firstBtn) {
+                const quality = firstBtn.dataset.quality;
+                selectQuality(quality);
+            }
+        }
+
+        function getFileSize(quality) {
+            const sizes = {
+                '480p': '500 MB',
+                '720p': '1.2 GB',
+                '1080p': '2.5 GB',
+                '4k': '8 GB'
+            };
+            return sizes[quality] || '1 GB';
+        }
+
+        function downloadContent(quality) {
+            // Implement download logic here
+            alert(`Downloading in ${quality} quality...`);
+            // In real implementation, this would trigger actual download
+            // window.location.href = downloadLink;
+        }
+
+        function downloadEpisode(episode, quality) {
+            alert(`Downloading Episode ${episode} in ${quality}...`);
+            // Implement episode download logic
+        }
+
+        function batchDownload(quality) {
+            alert(`Starting batch download of all episodes in ${quality}...`);
+            // Implement batch download logic
+        }
+
+        function selectSeason(season) {
+            document.querySelectorAll('.season-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            // Load episodes for selected season
+            console.log(`Loading Season ${season}`);
+        }
+    </script>
+</body>
+</html>
