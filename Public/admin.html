@@ -295,7 +295,7 @@
             padding: 30px;
             border-radius: 12px;
             width: 90%;
-            max-width: 800px;
+            max-width: 1000px;
             max-height: 90vh;
             overflow-y: auto;
         }
@@ -598,6 +598,60 @@
         .zip-size-input select {
             width: 100px;
         }
+
+        /* Episode Download Grid */
+        .episode-download-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* Edit Modal Episode Styles */
+        .edit-episode-section {
+            background: #1a1d29;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #333;
+        }
+
+        .edit-episode-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .episode-download-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .episode-zip-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .download-quality {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .download-quality label {
+            font-size: 11px;
+            color: #888;
+        }
+
+        .download-quality input {
+            padding: 6px;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
@@ -771,7 +825,7 @@
             <!-- Movie Download Links -->
             <div id="movieDownloadLinks" style="display: block;">
                 <h3 style="color: #667eea; margin: 20px 0;">Movie Download Links</h3>
-                <div class="quality-inputs">
+                <div class="episode-download-grid">
                     <div class="quality-input">
                         <label>480p Download Link</label>
                         <input type="text" id="download480p" placeholder="https://example.com/movie-480p.mp4">
@@ -826,7 +880,7 @@
                     <div class="zip-option active" id="zipSeasonOption">
                         <h5 style="color: #4CAF50; margin: 15px 0;">Season Wise ZIP Links</h5>
                         <div id="seasonZipContainer">
-                            <div class="quality-inputs">
+                            <div class="episode-download-grid">
                                 <div class="quality-input">
                                     <label>📦 Season 1 ZIP (480p)</label>
                                     <div class="zip-size-input">
@@ -849,6 +903,28 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="quality-input">
+                                    <label>📦 Season 1 ZIP (1080p)</label>
+                                    <div class="zip-size-input">
+                                        <input type="text" id="season1Zip1080p" placeholder="https://example.com/season1-1080p.zip">
+                                        <input type="text" id="season1Zip1080pSize" placeholder="Size" style="width: 100px;">
+                                        <select id="season1Zip1080pSizeUnit">
+                                            <option value="GB">GB</option>
+                                            <option value="MB">MB</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="quality-input">
+                                    <label>📦 Season 1 ZIP (4K)</label>
+                                    <div class="zip-size-input">
+                                        <input type="text" id="season1Zip4k" placeholder="https://example.com/season1-4k.zip">
+                                        <input type="text" id="season1Zip4kSize" placeholder="Size" style="width: 100px;">
+                                        <select id="season1Zip4kSizeUnit">
+                                            <option value="GB">GB</option>
+                                            <option value="MB">MB</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <button class="add-episode-btn" type="button" onclick="addSeasonZip()" style="background: #ff9800;">+ Add More Seasons</button>
@@ -857,7 +933,7 @@
                     <!-- Complete Series ZIP -->
                     <div class="zip-option" id="zipCompleteOption">
                         <h5 style="color: #4CAF50; margin: 15px 0;">Complete Series ZIP Links</h5>
-                        <div class="quality-inputs">
+                        <div class="episode-download-grid">
                             <div class="quality-input">
                                 <label>📦 Complete Series (480p)</label>
                                 <div class="zip-size-input">
@@ -886,6 +962,17 @@
                                     <input type="text" id="completeZip1080p" placeholder="https://example.com/complete-1080p.zip">
                                     <input type="text" id="completeZip1080pSize" placeholder="Size" style="width: 100px;">
                                     <select id="completeZip1080pSizeUnit">
+                                        <option value="GB">GB</option>
+                                        <option value="MB">MB</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="quality-input">
+                                <label>📦 Complete Series (4K)</label>
+                                <div class="zip-size-input">
+                                    <input type="text" id="completeZip4k" placeholder="https://example.com/complete-4k.zip">
+                                    <input type="text" id="completeZip4kSize" placeholder="Size" style="width: 100px;">
+                                    <select id="completeZip4kSizeUnit">
                                         <option value="GB">GB</option>
                                         <option value="MB">MB</option>
                                     </select>
@@ -925,10 +1012,6 @@
     <!-- Edit Modal -->
     <div class="modal" id="editModal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2>Edit Content</h2>
-                <button class="close-btn" onclick="closeEditModal()">&times;</button>
-            </div>
             <div id="editForm">
                 <!-- Edit form will be loaded dynamically -->
             </div>
@@ -1096,7 +1179,7 @@
             seasonZipCounter++;
             const container = document.getElementById('seasonZipContainer');
             const seasonHtml = `
-                <div class="quality-inputs" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #333;">
+                <div class="episode-download-grid" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #333;">
                     <div class="quality-input">
                         <label>📦 Season ${seasonZipCounter} ZIP (480p)</label>
                         <div class="zip-size-input">
@@ -1119,16 +1202,43 @@
                             </select>
                         </div>
                     </div>
-                    <button class="remove-episode-btn" type="button" onclick="removeSeasonZip(${seasonZipCounter})" style="margin-top: 10px;">Remove Season ${seasonZipCounter}</button>
+                    <div class="quality-input">
+                        <label>📦 Season ${seasonZipCounter} ZIP (1080p)</label>
+                        <div class="zip-size-input">
+                            <input type="text" id="season${seasonZipCounter}Zip1080p" placeholder="https://example.com/season${seasonZipCounter}-1080p.zip">
+                            <input type="text" id="season${seasonZipCounter}Zip1080pSize" placeholder="Size" style="width: 100px;">
+                            <select id="season${seasonZipCounter}Zip1080pSizeUnit">
+                                <option value="GB">GB</option>
+                                <option value="MB">MB</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="quality-input">
+                        <label>📦 Season ${seasonZipCounter} ZIP (4K)</label>
+                        <div class="zip-size-input">
+                            <input type="text" id="season${seasonZipCounter}Zip4k" placeholder="https://example.com/season${seasonZipCounter}-4k.zip">
+                            <input type="text" id="season${seasonZipCounter}Zip4kSize" placeholder="Size" style="width: 100px;">
+                            <select id="season${seasonZipCounter}Zip4kSizeUnit">
+                                <option value="GB">GB</option>
+                                <option value="MB">MB</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="grid-column: 1 / -1; margin-top: 10px;">
+                        <button class="remove-episode-btn" type="button" onclick="removeSeasonZip(${seasonZipCounter})">Remove Season ${seasonZipCounter}</button>
+                    </div>
                 </div>
             `;
             container.insertAdjacentHTML('beforeend', seasonHtml);
         }
 
         function removeSeasonZip(seasonNum) {
-            const seasonElement = document.querySelector(`[id^="season${seasonNum}Zip"]`).closest('.quality-inputs');
-            if (seasonElement) {
-                seasonElement.remove();
+            const seasonElements = document.querySelectorAll(`[id^="season${seasonNum}Zip"]`);
+            if (seasonElements.length > 0) {
+                const container = seasonElements[0].closest('.episode-download-grid');
+                if (container) {
+                    container.remove();
+                }
             }
         }
 
@@ -1150,17 +1260,31 @@
                         <label>Episode Title</label>
                         <input type="text" id="ep${episodeCounter}-title" placeholder="Enter episode title">
                     </div>
-                    <div class="quality-inputs">
+                    
+                    <h5 style="color: #4CAF50; margin: 15px 0 10px 0;">📥 Episode Download Links</h5>
+                    <div class="episode-download-grid">
                         <div class="quality-input">
-                            <label>📥 Download Link (480p)</label>
-                            <input type="text" id="ep${episodeCounter}-480p" placeholder="https://example.com/ep${episodeCounter}.mp4">
+                            <label>480p Download Link</label>
+                            <input type="text" id="ep${episodeCounter}-480p" placeholder="https://example.com/ep${episodeCounter}-480p.mp4">
                         </div>
                         <div class="quality-input">
-                            <label>📥 Download Link (720p)</label>
+                            <label>720p Download Link</label>
                             <input type="text" id="ep${episodeCounter}-720p" placeholder="https://example.com/ep${episodeCounter}-720p.mp4">
                         </div>
                         <div class="quality-input">
-                            <label>📥 Episode ZIP (480p) - Optional</label>
+                            <label>1080p Download Link</label>
+                            <input type="text" id="ep${episodeCounter}-1080p" placeholder="https://example.com/ep${episodeCounter}-1080p.mp4">
+                        </div>
+                        <div class="quality-input">
+                            <label>4K Download Link</label>
+                            <input type="text" id="ep${episodeCounter}-4k" placeholder="https://example.com/ep${episodeCounter}-4k.mp4">
+                        </div>
+                    </div>
+                    
+                    <h5 style="color: #ff9800; margin: 15px 0 10px 0;">📦 Episode ZIP Downloads (Optional)</h5>
+                    <div class="episode-download-grid">
+                        <div class="quality-input">
+                            <label>Episode ZIP (480p)</label>
                             <div class="zip-size-input">
                                 <input type="text" id="ep${episodeCounter}-zip480p" placeholder="https://example.com/ep${episodeCounter}-480p.zip">
                                 <input type="text" id="ep${episodeCounter}-zip480pSize" placeholder="Size" style="width: 80px;">
@@ -1171,11 +1295,33 @@
                             </div>
                         </div>
                         <div class="quality-input">
-                            <label>📥 Episode ZIP (720p) - Optional</label>
+                            <label>Episode ZIP (720p)</label>
                             <div class="zip-size-input">
                                 <input type="text" id="ep${episodeCounter}-zip720p" placeholder="https://example.com/ep${episodeCounter}-720p.zip">
                                 <input type="text" id="ep${episodeCounter}-zip720pSize" placeholder="Size" style="width: 80px;">
                                 <select id="ep${episodeCounter}-zip720pSizeUnit" style="width: 70px;">
+                                    <option value="MB">MB</option>
+                                    <option value="GB">GB</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="quality-input">
+                            <label>Episode ZIP (1080p)</label>
+                            <div class="zip-size-input">
+                                <input type="text" id="ep${episodeCounter}-zip1080p" placeholder="https://example.com/ep${episodeCounter}-1080p.zip">
+                                <input type="text" id="ep${episodeCounter}-zip1080pSize" placeholder="Size" style="width: 80px;">
+                                <select id="ep${episodeCounter}-zip1080pSizeUnit" style="width: 70px;">
+                                    <option value="MB">MB</option>
+                                    <option value="GB">GB</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="quality-input">
+                            <label>Episode ZIP (4K)</label>
+                            <div class="zip-size-input">
+                                <input type="text" id="ep${episodeCounter}-zip4k" placeholder="https://example.com/ep${episodeCounter}-4k.zip">
+                                <input type="text" id="ep${episodeCounter}-zip4kSize" placeholder="Size" style="width: 80px;">
+                                <select id="ep${episodeCounter}-zip4kSizeUnit" style="width: 70px;">
                                     <option value="MB">MB</option>
                                     <option value="GB">GB</option>
                                 </select>
@@ -1206,34 +1352,28 @@
                 const download = {};
                 const zipDownload = {};
 
-                // Get regular download links
-                const link480p = document.getElementById(`ep${id}-480p`)?.value?.trim();
-                const link720p = document.getElementById(`ep${id}-720p`)?.value?.trim();
+                // Get regular download links for all qualities
+                const qualities = ['480p', '720p', '1080p', '4k'];
+                qualities.forEach(quality => {
+                    const link = document.getElementById(`ep${id}-${quality}`)?.value?.trim();
+                    if (link) {
+                        download[quality] = link;
+                    }
+                });
 
-                if (link480p) download['480p'] = link480p;
-                if (link720p) download['720p'] = link720p;
+                // Get ZIP download links with size for all qualities
+                qualities.forEach(quality => {
+                    const zipLink = document.getElementById(`ep${id}-zip${quality}`)?.value?.trim();
+                    const zipSize = document.getElementById(`ep${id}-zip${quality}Size`)?.value?.trim();
+                    const zipUnit = document.getElementById(`ep${id}-zip${quality}SizeUnit`)?.value;
 
-                // Get ZIP download links with size
-                const zip480p = document.getElementById(`ep${id}-zip480p`)?.value?.trim();
-                const zip480pSize = document.getElementById(`ep${id}-zip480pSize`)?.value?.trim();
-                const zip480pUnit = document.getElementById(`ep${id}-zip480pSizeUnit`)?.value;
-
-                const zip720p = document.getElementById(`ep${id}-zip720p`)?.value?.trim();
-                const zip720pSize = document.getElementById(`ep${id}-zip720pSize`)?.value?.trim();
-                const zip720pUnit = document.getElementById(`ep${id}-zip720pSizeUnit`)?.value;
-
-                if (zip480p) {
-                    zipDownload['480p'] = {
-                        link: zip480p,
-                        size: zip480pSize ? `${zip480pSize} ${zip480pUnit}` : null
-                    };
-                }
-                if (zip720p) {
-                    zipDownload['720p'] = {
-                        link: zip720p,
-                        size: zip720pSize ? `${zip720pSize} ${zip720pUnit}` : null
-                    };
-                }
+                    if (zipLink) {
+                        zipDownload[quality] = {
+                            link: zipLink,
+                            size: zipSize ? `${zipSize} ${zipUnit}` : null
+                        };
+                    }
+                });
 
                 episodes.push({
                     episodeNumber: parseInt(epNumber) || episodes.length + 1,
@@ -1281,7 +1421,7 @@
             // Get season wise ZIP links
             for (let i = 1; i <= seasonZipCounter; i++) {
                 const seasonData = {};
-                const qualities = ['480p', '720p'];
+                const qualities = ['480p', '720p', '1080p', '4k'];
 
                 qualities.forEach(quality => {
                     const link = document.getElementById(`season${i}Zip${quality}`)?.value?.trim();
@@ -1302,7 +1442,7 @@
             }
 
             // Get complete series ZIP links
-            const completeQualities = ['480p', '720p', '1080p'];
+            const completeQualities = ['480p', '720p', '1080p', '4k'];
             completeQualities.forEach(quality => {
                 const link = document.getElementById(`completeZip${quality}`)?.value?.trim();
                 const size = document.getElementById(`completeZip${quality}Size`)?.value?.trim();
@@ -1542,7 +1682,7 @@
 
                 // Reset series ZIP sections
                 document.getElementById('seasonZipContainer').innerHTML = `
-                    <div class="quality-inputs">
+                    <div class="episode-download-grid">
                         <div class="quality-input">
                             <label>📦 Season 1 ZIP (480p)</label>
                             <div class="zip-size-input">
@@ -1565,11 +1705,33 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="quality-input">
+                            <label>📦 Season 1 ZIP (1080p)</label>
+                            <div class="zip-size-input">
+                                <input type="text" id="season1Zip1080p" placeholder="https://example.com/season1-1080p.zip">
+                                <input type="text" id="season1Zip1080pSize" placeholder="Size" style="width: 100px;">
+                                <select id="season1Zip1080pSizeUnit">
+                                    <option value="GB">GB</option>
+                                    <option value="MB">MB</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="quality-input">
+                            <label>📦 Season 1 ZIP (4K)</label>
+                            <div class="zip-size-input">
+                                <input type="text" id="season1Zip4k" placeholder="https://example.com/season1-4k.zip">
+                                <input type="text" id="season1Zip4kSize" placeholder="Size" style="width: 100px;">
+                                <select id="season1Zip4kSizeUnit">
+                                    <option value="GB">GB</option>
+                                    <option value="MB">MB</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 `;
 
                 // Reset complete series ZIP
-                ['480p', '720p', '1080p'].forEach(quality => {
+                ['480p', '720p', '1080p', '4k'].forEach(quality => {
                     document.getElementById(`completeZip${quality}`).value = '';
                     document.getElementById(`completeZip${quality}Size`).value = '';
                     document.getElementById(`completeZip${quality}SizeUnit`).value = 'GB';
@@ -1719,34 +1881,142 @@
             displayContent(filtered);
         }
 
-        // Open Edit Modal
+        // Open Edit Modal - UPDATED VERSION
         async function openEditModal(id, type) {
             try {
                 const response = await fetch(`${API_URL}/${type}/${id}`);
                 if (!response.ok) throw new Error('Failed to fetch item');
 
                 const item = await response.json();
+                console.log('Edit item data:', item);
 
+                let downloadSection = '';
+                let seriesInfoSection = '';
+                let episodesSection = '';
                 let zipSection = '';
-                // केवल anime और webseries में ZIP section show करें
-                if ((type === 'anime' || type === 'webseries') && item.zipDownload) {
-                    zipSection = `
-                        <div id="editZipSection">
-                            <h3 style="color: #ff9800; margin: 20px 0;">🎁 Series ZIP Download Links</h3>
-                            <div class="zip-note">
-                                💡 ZIP downloads are only available for anime and web series.
+
+                if (type === 'movies') {
+                    // Movie download links
+                    downloadSection = `
+                        <h3 style="color: #667eea; margin: 20px 0;">📥 Movie Download Links</h3>
+                        <div class="episode-download-grid">
+                            <div class="quality-input">
+                                <label>480p Download Link</label>
+                                <input type="text" id="editDownload480p" value="${item.download?.['480p'] || ''}">
                             </div>
-                            <!-- Add ZIP fields here based on item.zipDownload structure -->
+                            <div class="quality-input">
+                                <label>720p Download Link</label>
+                                <input type="text" id="editDownload720p" value="${item.download?.['720p'] || ''}">
+                            </div>
+                            <div class="quality-input">
+                                <label>1080p Download Link</label>
+                                <input type="text" id="editDownload1080p" value="${item.download?.['1080p'] || ''}">
+                            </div>
+                            <div class="quality-input">
+                                <label>4K Download Link</label>
+                                <input type="text" id="editDownload4k" value="${item.download?.['4k'] || ''}">
+                            </div>
                         </div>
                     `;
+                } else {
+                    // Series information
+                    seriesInfoSection = `
+                        <h3 style="color: #667eea; margin: 20px 0;">📺 Series Information</h3>
+                        <div class="form-group">
+                            <label>Number of Seasons</label>
+                            <input type="number" id="editSeasons" value="${item.seasons || 1}">
+                        </div>
+                        <div class="form-group">
+                            <label>Total Episodes</label>
+                            <input type="number" id="editTotalEpisodes" value="${item.totalEpisodes || ''}">
+                        </div>
+                    `;
+
+                    // Episodes section
+                    if (item.episodes && item.episodes.length > 0) {
+                        episodesSection = `
+                            <h3 style="color: #4CAF50; margin: 20px 0;">🎬 Episodes</h3>
+                            <div id="editEpisodesContainer">
+                                ${item.episodes.map((ep, index) => `
+                                    <div class="edit-episode-section" id="edit-episode-${index}">
+                                        <div class="edit-episode-header">
+                                            <h4>Episode ${ep.episodeNumber}${ep.title ? ': ' + ep.title : ''}</h4>
+                                        </div>
+                                        <input type="hidden" name="episodeIndex" value="${index}">
+                                        <div class="form-group">
+                                            <label>Episode Number</label>
+                                            <input type="number" id="editEp${index}Number" value="${ep.episodeNumber}" min="1">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Episode Title</label>
+                                            <input type="text" id="editEp${index}Title" value="${ep.title || ''}">
+                                        </div>
+                                        <h5 style="color: #667eea; margin: 10px 0;">📥 Download Links</h5>
+                                        <div class="episode-download-row">
+                                            <div class="download-quality">
+                                                <label>480p</label>
+                                                <input type="text" id="editEp${index}480p" value="${ep.download?.['480p'] || ''}">
+                                            </div>
+                                            <div class="download-quality">
+                                                <label>720p</label>
+                                                <input type="text" id="editEp${index}720p" value="${ep.download?.['720p'] || ''}">
+                                            </div>
+                                            <div class="download-quality">
+                                                <label>1080p</label>
+                                                <input type="text" id="editEp${index}1080p" value="${ep.download?.['1080p'] || ''}">
+                                            </div>
+                                            <div class="download-quality">
+                                                <label>4K</label>
+                                                <input type="text" id="editEp${index}4k" value="${ep.download?.['4k'] || ''}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
+
+                    // ZIP section for series (anime and webseries)
+                    if (type === 'anime' || type === 'webseries') {
+                        zipSection = `
+                            <h3 style="color: #ff9800; margin: 20px 0;">🎁 Series ZIP Downloads</h3>
+                            <div class="zip-note">
+                                💡 ZIP downloads are available for anime and web series.
+                            </div>
+                            ${item.zipDownload ? `
+                                <div class="form-group">
+                                    <label>ZIP Download Data (JSON format)</label>
+                                    <textarea id="editZipDownload" rows="6">${JSON.stringify(item.zipDownload, null, 2)}</textarea>
+                                    <small style="color: #999;">Edit the ZIP download data in JSON format above</small>
+                                </div>
+                            ` : `
+                                <div class="form-group">
+                                    <label>ZIP Download Data (JSON format)</label>
+                                    <textarea id="editZipDownload" rows="6" placeholder='{
+  "seasonWise": {
+    "season1": {
+      "480p": { "link": "https://...", "size": "5.8 GB" },
+      "720p": { "link": "https://...", "size": "8.2 GB" }
+    }
+  },
+  "completeSeries": {
+    "480p": { "link": "https://...", "size": "25 GB" },
+    "720p": { "link": "https://...", "size": "35 GB" }
+  }
+}'></textarea>
+                                    <small style="color: #999;">Add ZIP download data in JSON format</small>
+                                </div>
+                            `}
+                        `;
+                    }
                 }
 
                 const modalContent = `
                     <div class="modal-header">
-                        <h2>Edit ${type === 'movies' ? 'Movie' : type}</h2>
+                        <h2>Edit ${type === 'movies' ? 'Movie' : type.charAt(0).toUpperCase() + type.slice(1)}</h2>
                         <button class="close-btn" onclick="closeEditModal()">&times;</button>
                     </div>
-                    <input type="hidden" id="editId" value="${item._id}">
+                    <input type="hidden" id="editId" value="${item._id || item.id}">
                     <input type="hidden" id="editType" value="${type}">
 
                     <div class="form-group">
@@ -1778,46 +2048,14 @@
                         <input type="text" id="editDuration" value="${item.duration || ''}">
                     </div>
                     <div class="form-group">
-                        <label>Video URL</label>
+                        <label>Video URL (Streaming)</label>
                         <input type="text" id="editVideoUrl" value="${item.videoUrl || ''}">
                     </div>
 
-                    ${type === 'movies' ? `
-                    <div id="editMovieDownloadLinks">
-                        <h3 style="color: #667eea; margin: 20px 0;">Download Links</h3>
-                        <div class="quality-inputs">
-                            <div class="quality-input">
-                                <label>480p Download Link</label>
-                                <input type="text" id="editDownload480p" value="${item.download?.['480p'] || ''}">
-                            </div>
-                            <div class="quality-input">
-                                <label>720p Download Link</label>
-                                <input type="text" id="editDownload720p" value="${item.download?.['720p'] || ''}">
-                            </div>
-                            <div class="quality-input">
-                                <label>1080p Download Link</label>
-                                <input type="text" id="editDownload1080p" value="${item.download?.['1080p'] || ''}">
-                            </div>
-                            <div class="quality-input">
-                                <label>4K Download Link</label>
-                                <input type="text" id="editDownload4k" value="${item.download?.['4k'] || ''}">
-                            </div>
-                        </div>
-                    </div>
-                    ` : `
-                    <div id="editSeriesInfo">
-                        <h3 style="color: #667eea; margin: 20px 0;">Series Information</h3>
-                        <div class="form-group">
-                            <label>Number of Seasons</label>
-                            <input type="number" id="editSeasons" value="${item.seasons || 1}">
-                        </div>
-                        <div class="form-group">
-                            <label>Total Episodes</label>
-                            <input type="number" id="editTotalEpisodes" value="${item.totalEpisodes || ''}">
-                        </div>
-                    </div>
+                    ${downloadSection}
+                    ${seriesInfoSection}
+                    ${episodesSection}
                     ${zipSection}
-                    `}
 
                     <div class="form-group" style="margin-top: 20px;">
                         <label>
@@ -1828,6 +2066,9 @@
 
                     <button class="btn btn-primary" onclick="updateContent()">
                         💾 Save Changes
+                    </button>
+                    <button class="btn" onclick="closeEditModal()" style="background: #666; margin-left: 10px;">
+                        Cancel
                     </button>
                 `;
 
@@ -1845,7 +2086,7 @@
             document.getElementById('editModal').classList.remove('active');
         }
 
-        // Update Content
+        // Update Content - UPDATED VERSION
         async function updateContent() {
             const id = document.getElementById('editId').value;
             const type = document.getElementById('editType').value;
@@ -1862,11 +2103,11 @@
                 featured: document.getElementById('editFeatured').checked
             };
 
-            // Add download links for movies
+            // Handle movie download links
             if (type === 'movies') {
                 const downloadLinks = {};
                 ['480p', '720p', '1080p', '4k'].forEach(quality => {
-                    const link = document.getElementById(`editDownload${quality}`).value.trim();
+                    const link = document.getElementById(`editDownload${quality}`)?.value?.trim();
                     if (link) downloadLinks[quality] = link;
                 });
 
@@ -1874,14 +2115,65 @@
                     data.download = downloadLinks;
                     data.quality = Object.keys(downloadLinks);
                 }
-
-                // MOVIE में ZIP download नहीं होगा
-                // data.zipDownload = undefined;
             } else {
-                // For series, add seasons info
+                // Handle series data
                 data.seasons = parseInt(document.getElementById('editSeasons').value) || 1;
                 data.totalEpisodes = parseInt(document.getElementById('editTotalEpisodes').value) || 1;
+
+                // Handle episodes if they exist
+                const episodesContainer = document.getElementById('editEpisodesContainer');
+                if (episodesContainer) {
+                    const episodes = [];
+                    const episodeSections = episodesContainer.querySelectorAll('.edit-episode-section');
+                    
+                    episodeSections.forEach((section, index) => {
+                        const epNumber = document.getElementById(`editEp${index}Number`)?.value;
+                        const epTitle = document.getElementById(`editEp${index}Title`)?.value;
+                        const download = {};
+
+                        // Get download links for all qualities
+                        ['480p', '720p', '1080p', '4k'].forEach(quality => {
+                            const link = document.getElementById(`editEp${index}${quality}`)?.value?.trim();
+                            if (link) {
+                                download[quality] = link;
+                            }
+                        });
+
+                        episodes.push({
+                            episodeNumber: parseInt(epNumber) || index + 1,
+                            title: epTitle || `Episode ${epNumber || index + 1}`,
+                            download: Object.keys(download).length > 0 ? download : undefined
+                        });
+                    });
+
+                    if (episodes.length > 0) {
+                        data.episodes = episodes;
+                        // Set quality from episodes
+                        const allQualities = new Set();
+                        episodes.forEach(ep => {
+                            if (ep.download) {
+                                Object.keys(ep.download).forEach(q => allQualities.add(q));
+                            }
+                        });
+                        data.quality = Array.from(allQualities);
+                    }
+                }
+
+                // Handle ZIP download data for series
+                const zipDownloadText = document.getElementById('editZipDownload')?.value?.trim();
+                if (zipDownloadText) {
+                    try {
+                        const zipData = JSON.parse(zipDownloadText);
+                        data.zipDownload = zipData;
+                    } catch (e) {
+                        console.error('Invalid ZIP download JSON:', e);
+                        showMessage('❌ Invalid ZIP download JSON format', 'error');
+                        return;
+                    }
+                }
             }
+
+            console.log('Updating content:', data);
 
             try {
                 const response = await fetch(`${API_URL}/${type}/${id}`, {
@@ -1951,6 +2243,8 @@
                 document.getElementById('duration').value = '3h 2m';
                 document.getElementById('download480p').value = 'https://example.com/avengers-480p.mp4';
                 document.getElementById('download720p').value = 'https://example.com/avengers-720p.mp4';
+                document.getElementById('download1080p').value = 'https://example.com/avengers-1080p.mp4';
+                document.getElementById('download4k').value = 'https://example.com/avengers-4k.mp4';
                 document.querySelector('#lang-english').checked = true;
                 document.querySelector('#cat-action').checked = true;
                 document.querySelector('#cat-scifi').checked = true;
@@ -1983,9 +2277,15 @@
                 document.getElementById('season1Zip480p').value = 'https://example.com/aot-season1-480p.zip';
                 document.getElementById('season1Zip480pSize').value = '5.8';
                 document.getElementById('season1Zip480pSizeUnit').value = 'GB';
+                document.getElementById('season1Zip4k').value = 'https://example.com/aot-season1-4k.zip';
+                document.getElementById('season1Zip4kSize').value = '15';
+                document.getElementById('season1Zip4kSizeUnit').value = 'GB';
                 document.getElementById('completeZip480p').value = 'https://example.com/aot-complete-480p.zip';
                 document.getElementById('completeZip480pSize').value = '25';
                 document.getElementById('completeZip480pSizeUnit').value = 'GB';
+                document.getElementById('completeZip4k').value = 'https://example.com/aot-complete-4k.zip';
+                document.getElementById('completeZip4kSize').value = '80';
+                document.getElementById('completeZip4kSizeUnit').value = 'GB';
                 document.querySelector('#lang-japanese').checked = true;
                 document.querySelector('#cat-action').checked = true;
                 document.querySelector('#cat-drama').checked = true;
@@ -2000,9 +2300,14 @@
                 addEpisode();
                 document.getElementById('ep1-480p').value = 'https://example.com/aot-ep1-480p.mp4';
                 document.getElementById('ep1-720p').value = 'https://example.com/aot-ep1-720p.mp4';
+                document.getElementById('ep1-1080p').value = 'https://example.com/aot-ep1-1080p.mp4';
+                document.getElementById('ep1-4k').value = 'https://example.com/aot-ep1-4k.mp4';
                 document.getElementById('ep1-zip480p').value = 'https://example.com/aot-ep1-480p.zip';
                 document.getElementById('ep1-zip480pSize').value = '350';
                 document.getElementById('ep1-zip480pSizeUnit').value = 'MB';
+                document.getElementById('ep1-zip4k').value = 'https://example.com/aot-ep1-4k.zip';
+                document.getElementById('ep1-zip4kSize').value = '1.2';
+                document.getElementById('ep1-zip4kSizeUnit').value = 'GB';
 
                 // Trigger image preview
                 document.getElementById('imageUrl').dispatchEvent(new Event('input'));
@@ -2027,9 +2332,15 @@
                 document.getElementById('season1Zip480p').value = 'https://example.com/moneyheist-s1-480p.zip';
                 document.getElementById('season1Zip480pSize').value = '8.5';
                 document.getElementById('season1Zip480pSizeUnit').value = 'GB';
+                document.getElementById('season1Zip4k').value = 'https://example.com/moneyheist-s1-4k.zip';
+                document.getElementById('season1Zip4kSize').value = '25';
+                document.getElementById('season1Zip4kSizeUnit').value = 'GB';
                 document.getElementById('completeZip720p').value = 'https://example.com/moneyheist-complete-720p.zip';
                 document.getElementById('completeZip720pSize').value = '45';
                 document.getElementById('completeZip720pSizeUnit').value = 'GB';
+                document.getElementById('completeZip4k').value = 'https://example.com/moneyheist-complete-4k.zip';
+                document.getElementById('completeZip4kSize').value = '120';
+                document.getElementById('completeZip4kSizeUnit').value = 'GB';
                 document.querySelector('#lang-spanish').checked = true;
                 document.querySelector('#lang-english').checked = true;
                 document.querySelector('#cat-action').checked = true;
@@ -2045,6 +2356,14 @@
                 addEpisode();
                 document.getElementById('ep1-480p').value = 'https://example.com/mh-s1e1-480p.mp4';
                 document.getElementById('ep1-720p').value = 'https://example.com/mh-s1e1-720p.mp4';
+                document.getElementById('ep1-1080p').value = 'https://example.com/mh-s1e1-1080p.mp4';
+                document.getElementById('ep1-4k').value = 'https://example.com/mh-s1e1-4k.mp4';
+                document.getElementById('ep1-zip480p').value = 'https://example.com/mh-s1e1-480p.zip';
+                document.getElementById('ep1-zip480pSize').value = '450';
+                document.getElementById('ep1-zip480pSizeUnit').value = 'MB';
+                document.getElementById('ep1-zip4k').value = 'https://example.com/mh-s1e1-4k.zip';
+                document.getElementById('ep1-zip4kSize').value = '1.8';
+                document.getElementById('ep1-zip4kSizeUnit').value = 'GB';
 
                 // Trigger image preview
                 document.getElementById('imageUrl').dispatchEvent(new Event('input'));
