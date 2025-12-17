@@ -300,10 +300,10 @@
             color: rgba(255, 255, 255, 0.5);
         }
 
-        /* WebSeries Grid */
+        /* WebSeries Grid - Updated to match movies layout */
         .series-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 2rem;
             padding: 1rem 0;
         }
@@ -332,32 +332,19 @@
             padding: 1rem;
         }
 
+        .series-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
         .series-title {
             font-size: 1.2rem;
             font-weight: bold;
-            margin-bottom: 0.5rem;
             color: #ffffff;
-        }
-
-        .series-category {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            background: rgba(255, 215, 0, 0.2);
-            border-radius: 15px;
-            font-size: 0.8rem;
-            color: #ffd700;
-            margin-bottom: 0.5rem;
-        }
-
-        .series-details {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .series-year {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
+            flex: 1;
+            margin-right: 0.5rem;
         }
 
         .series-rating {
@@ -366,6 +353,104 @@
             gap: 0.3rem;
             color: #ffd700;
             font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .series-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .series-category-badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: #ffd700;
+        }
+
+        .series-year-badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: #ffd700;
+        }
+
+        /* Description */
+        .series-description {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.4;
+            margin-bottom: 0.8rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Meta Info (Language & Quality) */
+        .series-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .meta-label {
+            color: rgba(255, 255, 255, 0.5);
+            min-width: 70px;
+        }
+
+        .meta-value {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+        }
+
+        .language-tag {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .quality-tag {
+            background: rgba(156, 39, 176, 0.2);
+            color: #ce93d8;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .quality-tag.hd {
+            background: rgba(33, 150, 243, 0.2);
+            color: #64b5f6;
+        }
+
+        .quality-tag.fhd {
+            background: rgba(255, 152, 0, 0.2);
+            color: #ffb74d;
+        }
+
+        .quality-tag.uhd {
+            background: rgba(244, 67, 54, 0.2);
+            color: #ef5350;
         }
 
         /* Loading State */
@@ -536,7 +621,7 @@
         /* Responsive Design */
         @media (max-width: 1024px) {
             .series-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
                 gap: 1.5rem;
             }
 
@@ -590,7 +675,7 @@
             }
 
             .series-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
                 gap: 1rem;
             }
 
@@ -599,7 +684,12 @@
             }
 
             .series-title {
-                font-size: 1rem;
+                font-size: 0.95rem;
+            }
+
+            .series-description {
+                font-size: 0.75rem;
+                -webkit-line-clamp: 2;
             }
 
             .search-bar {
@@ -610,6 +700,14 @@
             .footer-content,
             .footer-bottom {
                 padding: 0 20px;
+            }
+
+            .meta-item {
+                font-size: 0.7rem;
+            }
+
+            .meta-label {
+                min-width: 60px;
             }
 
             .pagination-container {
@@ -640,25 +738,30 @@
             }
 
             .series-poster {
-                height: 200px;
+                height: 180px;
             }
 
             .series-info {
-                padding: 0.8rem;
+                padding: 0.7rem;
             }
 
             .series-title {
-                font-size: 0.9rem;
+                font-size: 0.85rem;
             }
 
-            .series-category {
+            .series-category-badge,
+            .series-year-badge {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.4rem;
+            }
+
+            .series-description {
                 font-size: 0.7rem;
-                padding: 0.2rem 0.6rem;
+                -webkit-line-clamp: 2;
             }
 
-            .series-year,
             .series-rating {
-                font-size: 0.8rem;
+                font-size: 0.75rem;
             }
 
             .page-header h1 {
@@ -674,6 +777,17 @@
                 padding: 0.3rem 0.6rem;
             }
 
+            .language-tag,
+            .quality-tag {
+                font-size: 0.6rem;
+                padding: 0.15rem 0.4rem;
+            }
+
+            .meta-label {
+                min-width: 50px;
+                font-size: 0.65rem;
+            }
+
             .page-number {
                 width: 35px;
                 height: 35px;
@@ -687,7 +801,11 @@
             }
 
             .series-poster {
-                height: 280px;
+                height: 250px;
+            }
+
+            .series-description {
+                -webkit-line-clamp: 3;
             }
 
             .page-numbers {
@@ -707,7 +825,7 @@
     <header>
         <div class="logo">
             <div class="logo-icon">▶</div>
-            MoviesHuB4u
+            RDBHuB4u
         </div>
 
         <div class="menu-toggle" onclick="toggleSidebar()">
@@ -772,7 +890,9 @@
         </div>
 
         <div class="series-grid" id="seriesGrid">
-            <div class="loading">Loading web series...</div>
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Loading web series...
+            </div>
         </div>
 
         <!-- NEW PAGINATION -->
@@ -841,6 +961,7 @@
     </footer>
 
     <script>
+        // API URL
         const API_URL = 'https://rdbhub4u.onrender.com/api';
 
         // Pagination variables
@@ -853,47 +974,59 @@
         let currentCategory = 'all';
         let searchTerm = '';
 
-
-
         // Load web series from API
-    async function loadAllWebSeries() {
-    try {
-        const response = await fetch(`${API_URL}/webseries`);
-        
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
+        async function loadAllSeries() {
+            try {
+                const response = await fetch(`${API_URL}/webseries`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success && Array.isArray(data.webseries)) {
+                    allSeries = data.webseries;
+                } else {
+                    allSeries = [];
+                    console.warn('No web series found in API response');
+                }
+
+            } catch (error) {
+                console.error('Failed to load web series from API:', error.message);
+                allSeries = []; // No fallback data
+            }
+
+            filterAndPaginateSeries();
         }
 
-        const data = await response.json();
-
-        if (data.success && data.webseries && data.webseries.length > 0) {
-            allWebSeries = data.webseries;
-        } else {
-            allWebSeries = []; // Set to empty array on failure
-            console.warn('No webseries found in API response');
+        // Get quality class for styling
+        function getQualityClass(quality) {
+            const q = quality.toLowerCase();
+            if (q === '4k' || q === 'uhd') return 'uhd';
+            if (q === 'fhd' || q === '1080p') return 'fhd';
+            if (q === 'hd' || q === '720p') return 'hd';
+            return '';
         }
-
-    } catch (error) {
-        console.error('API call failed, using empty array:', error);
-        allWebSeries = []; // Set to empty array on error
-    }
-
-    filterAndPaginateWebSeries();
-}
 
         // Filter series based on search and category
         function filterSeries() {
             let filtered = [...allSeries];
 
+            // Category filter
             if (currentCategory !== 'all') {
                 filtered = filtered.filter(series =>
                     series.category && series.category.toLowerCase() === currentCategory.toLowerCase()
                 );
             }
 
+            // Search filter
             if (searchTerm) {
+                const term = searchTerm.toLowerCase();
                 filtered = filtered.filter(series =>
-                    series.title.toLowerCase().includes(searchTerm.toLowerCase())
+                    series.title.toLowerCase().includes(term) ||
+                    (series.category && series.category.toLowerCase().includes(term)) ||
+                    (series.description && series.description.toLowerCase().includes(term))
                 );
             }
 
@@ -989,20 +1122,61 @@
                 return;
             }
 
-            grid.innerHTML = seriesList.map(series => `
-                <div class="series-card" onclick="openDetail('${series._id}')">
-                    <img src="${series.image}" alt="${series.title}" class="series-poster"
-                         onerror="this.src='https://via.placeholder.com/250x350?text=No+Image'">
-                    <div class="series-info">
-                        <span class="series-category">${series.category || 'Series'}</span>
-                        <div class="series-title">${series.title}</div>
-                        <div class="series-details">
-                            <span class="series-year">${series.year || 'N/A'}</span>
-                            <span class="series-rating">⭐ ${series.rating || 'N/A'}</span>
+            grid.innerHTML = seriesList.map(series => {
+                // Handle languages array or string
+                const languages = Array.isArray(series.languages) ? series.languages :
+                                 (series.languages ? [series.languages] : ['English']);
+
+                // Handle quality array or string
+                const qualities = Array.isArray(series.quality) ? series.quality :
+                                 (series.quality ? [series.quality] : ['HD']);
+
+                // Get image URL
+                const imageUrl = series.image || series.poster || 'https://via.placeholder.com/400x600?text=No+Image';
+
+                // Get description
+                const description = series.description || 'No description available.';
+
+                return `
+                    <div class="series-card" onclick="openDetail('${series._id}')">
+                        <img src="${imageUrl}" alt="${series.title}" class="series-poster"
+                             onerror="this.src='https://via.placeholder.com/400x600?text=No+Image'">
+                        <div class="series-info">
+                            <div class="series-header">
+                                <div class="series-title">${series.title}</div>
+                                <span class="series-rating">⭐ ${series.rating || 'N/A'}</span>
+                            </div>
+
+                            <div class="series-badges">
+                                <span class="series-category-badge">${series.category || 'Series'}</span>
+                                <span class="series-year-badge">${series.year || 'N/A'}</span>
+                            </div>
+
+                            <div class="series-description">${description}</div>
+
+                            <div class="series-meta">
+                                <div class="meta-item">
+                                    <span class="meta-label">Language:</span>
+                                    <div class="meta-value">
+                                        ${languages.map(lang => `<span class="language-tag">${lang}</span>`).join('')}
+                                    </div>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Quality:</span>
+                                    <div class="meta-value">
+                                        ${qualities.map(q => `<span class="quality-tag ${getQualityClass(q)}">${q}</span>`).join('')}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
+        }
+
+        // Open detail page
+        function openDetail(id) {
+            window.location.href = `detail.html?id=${id}`;
         }
 
         // Toggle sidebar
@@ -1021,6 +1195,7 @@
         function filterCategory(category) {
             currentCategory = category;
 
+            // Update category badge
             const badge = document.getElementById('categoryBadge');
             if (category === 'all') {
                 badge.style.display = 'none';
@@ -1031,12 +1206,17 @@
 
             filterAndPaginateSeries();
 
+            // Close sidebar if open
             const sidebar = document.getElementById('sidebar');
             if (sidebar.classList.contains('active')) {
                 toggleSidebar();
             }
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Scroll to top
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         }
 
         // Search functionality
@@ -1045,13 +1225,8 @@
             filterAndPaginateSeries();
         });
 
-        // Open detail page
-        function openDetail(id) {
-            window.location.href = `detail.html?id=${id}`;
-        }
-
         // Initial load
-        loadSeries();
+        loadAllSeries();
     </script>
 </body>
 </html>
