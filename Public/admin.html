@@ -1782,13 +1782,15 @@
             toggleContentType();
         }
 
-        // ==================== LOAD CONTENT ====================
+        // ==================== LOAD CONTENT (FIXED FOR ANIME & WEBSERIES) ====================
         async function loadContent() {
             const type = document.getElementById('manageType').value;
             const contentList = document.getElementById('contentList');
             contentList.innerHTML = '<div class="loading">⏳ Loading content...</div>';
 
             try {
+                console.log(`Loading ${type} from: ${API_URL}/${type}`);
+                
                 const response = await fetch(`${API_URL}/${type}`, {
                     headers: {
                         'Accept': 'application/json'
@@ -1796,15 +1798,17 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error(`Failed to fetch ${type}: ${response.status}`);
+                    throw new Error(`HTTP ${response.status} - Failed to fetch ${type}`);
                 }
 
                 const result = await response.json();
+                console.log('API Response for', type, ':', result);
                 
                 // Extract content array from response
                 let contentArray = [];
 
                 if (result.success) {
+                    // Try different response structures
                     if (result[type] && Array.isArray(result[type])) {
                         contentArray = result[type];
                     } else if (result.data && Array.isArray(result.data)) {
@@ -1817,12 +1821,40 @@
                         contentArray = result.anime;
                     } else if (result.webseries && Array.isArray(result.webseries)) {
                         contentArray = result.webseries;
+                    } else {
+                        // Look for any array in the response
+                        for (const key in result) {
+                            if (Array.isArray(result[key]) && key !== 'success' && key !== 'message' && key !== 'count') {
+                                contentArray = result[key];
+                                console.log(`Found array in key: ${key}`);
+                                break;
+                            }
+                        }
                     }
-                } else if (Array.isArray(result)) {
+                } 
+                // Direct array response
+                else if (Array.isArray(result)) {
                     contentArray = result;
                 }
+                // Try to find array in nested response
+                else {
+                    for (const key in result) {
+                        if (Array.isArray(result[key])) {
+                            contentArray = result[key];
+                            console.log(`Found array in key: ${key}`);
+                            break;
+                        }
+                    }
+                }
+
+                console.log(`Extracted ${contentArray.length} items for ${type}`);
                 
-                allContent = contentArray || [];
+                if (!contentArray || !Array.isArray(contentArray)) {
+                    contentArray = [];
+                    console.warn(`No valid array found for ${type}, using empty array`);
+                }
+                
+                allContent = contentArray;
                 currentPage = 1;
 
                 if (allContent.length === 0) {
@@ -1848,7 +1880,8 @@
                         <div class="empty-state-icon">⚠</div>
                         <div>Error loading ${type}</div>
                         <div style="font-size: 12px; margin-top: 10px; color: #666; background: #252936; padding: 10px; border-radius: 6px;">
-                            ${error.message}
+                            ${error.message}<br>
+                            <small>URL: ${API_URL}/${type}</small>
                         </div>
                         <div style="margin-top: 15px;">
                             <button class="btn" onclick="loadContent()" style="background: #667eea; padding: 8px 16px;">
@@ -1875,31 +1908,49 @@
             }
 
             contentList.innerHTML = content.map(item => {
+                // Safely get data with fallbacks
+                const itemId = item._id || item.id || '';
+                const itemTitle = item.title || 'Untitled';
+                const itemImage = item.image || 'https://via.placeholder.com/200x280?text=No+Image';
+                const itemYear = item.year || 'N/A';
+                const itemRating = item.rating || 'N/A';
+                const itemCategory = item.category || '';
+                const itemFeatured = item.featured || false;
+                
+                // Check if item has zipDownload
                 const hasZip = item.zipDownload && (
                     (item.zipDownload.seasonWise && Object.keys(item.zipDownload.seasonWise).length > 0) ||
                     (item.zipDownload.completeSeries && Object.keys(item.zipDownload.completeSeries).length > 0)
                 );
 
-                const qualities = item.quality || (item.download ? Object.keys(item.download) : []);
+                // Get quality badges
+                let qualities = [];
+                if (item.quality && Array.isArray(item.quality)) {
+                    qualities = item.quality;
+                } else if (item.download && typeof item.download === 'object') {
+                    qualities = Object.keys(item.download);
+                }
+                
                 const qualityBadges = qualities.slice(0, 3).map(q => 
                     `<span class="quality-badge">${q}</span>`
                 ).join('');
 
-                const statusBadge = item.featured ? 
+                // Status badge
+                const statusBadge = itemFeatured ? 
                     '<span class="status-badge status-featured">⭐ Featured</span>' : 
                     '<span class="status-badge status-regular">Regular</span>';
 
                 return `
-                <div class="content-card" data-id="${item._id || item.id}">
-                    <img src="${item.image || 'https://via.placeholder.com/200x280?text=No+Image'}" 
-                         alt="${item.title}" 
+                <div class="content-card" data-id="${itemId}">
+                    <img src="${itemImage}" 
+                         alt="${itemTitle}" 
                          class="content-img"
                          onerror="this.src='https://via.placeholder.com/200x280?text=No+Image'">
                     <div class="content-info">
-                        <div class="content-title" title="${item.title}">${item.title}</div>
+                        <div class="content-title" title="${itemTitle}">${itemTitle}</div>
                         <div class="content-meta">
-                            <span>${item.year || 'N/A'}</span>
-                            <span>⭐ ${item.rating || 'N/A'}</span>
+                            <span>${itemYear}</span>
+                            <span>⭐ ${itemRating}</span>
                         </div>
                         <div style="margin-bottom: 8px;">
                             ${qualityBadges}
@@ -1911,11 +1962,11 @@
                         </div>
                         <div class="content-actions">
                             <button class="btn btn-small btn-edit" 
-                                    onclick="openEditModal('${item._id || item.id}', '${document.getElementById('manageType').value}')">
+                                    onclick="openEditModal('${itemId}', '${document.getElementById('manageType').value}')">
                                 ✏ Edit
                             </button>
                             <button class="btn btn-small btn-delete" 
-                                    onclick="deleteContent('${item._id || item.id}', '${document.getElementById('manageType').value}')">
+                                    onclick="deleteContent('${itemId}', '${document.getElementById('manageType').value}')">
                                 🗑 Delete
                             </button>
                         </div>
@@ -2015,6 +2066,8 @@
                 `;
                 document.getElementById('editModal').classList.add('active');
 
+                console.log(`Fetching ${type} with ID: ${id} from ${API_URL}/${type}/${id}`);
+                
                 const response = await fetch(`${API_URL}/${type}/${id}`, {
                     headers: {
                         'Accept': 'application/json'
@@ -2022,10 +2075,11 @@
                 });
                 
                 if (!response.ok) {
-                    throw new Error(`Failed to fetch item: ${response.status}`);
+                    throw new Error(`HTTP ${response.status} - Failed to fetch item`);
                 }
 
                 const result = await response.json();
+                console.log('Edit modal response:', result);
                 
                 let item = null;
                 if (result.success) {
@@ -2067,6 +2121,17 @@
         }
 
         function createEditForm(item, type, id) {
+            // Get languages safely
+            let languages = '';
+            if (Array.isArray(item.language)) {
+                languages = item.language.join(', ');
+            } else if (item.language) {
+                languages = item.language;
+            }
+            
+            // Get categories
+            const category = item.category || '';
+            
             // Simple edit form
             const editFormHTML = `
                 <div class="modal-header">
@@ -2085,6 +2150,11 @@
                 <div class="form-group">
                     <label>Image URL *</label>
                     <input type="text" id="editImageUrl" value="${item.image || ''}" required>
+                    <div style="margin-top: 10px;">
+                        <img src="${item.image}" alt="Preview" 
+                             style="max-width: 200px; max-height: 150px; border-radius: 8px; border: 2px solid #333;"
+                             onerror="this.style.display='none'">
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -2094,13 +2164,13 @@
 
                 <div class="form-group">
                     <label>Category</label>
-                    <input type="text" id="editCategory" value="${item.category || ''}" 
+                    <input type="text" id="editCategory" value="${category}" 
                            placeholder="Action, Drama, Comedy">
                 </div>
 
                 <div class="form-group">
                     <label>Languages</label>
-                    <input type="text" id="editLanguage" value="${Array.isArray(item.language) ? item.language.join(', ') : item.language || ''}" 
+                    <input type="text" id="editLanguage" value="${languages}" 
                            placeholder="English, Hindi, Japanese">
                 </div>
 
@@ -2117,6 +2187,12 @@
                 <div class="form-group">
                     <label>Duration</label>
                     <input type="text" id="editDuration" value="${item.duration || ''}" placeholder="2h 30m">
+                </div>
+
+                <div class="form-group">
+                    <label>Video URL (Streaming)</label>
+                    <input type="text" id="editVideoUrl" value="${item.videoUrl || ''}" 
+                           placeholder="https://example.com/stream.mp4">
                 </div>
 
                 <div class="form-group" style="margin-top: 20px;">
@@ -2161,6 +2237,7 @@
                 year: document.getElementById('editYear').value ? parseInt(document.getElementById('editYear').value) : null,
                 rating: document.getElementById('editRating').value.trim() || '',
                 duration: document.getElementById('editDuration').value.trim() || '',
+                videoUrl: document.getElementById('editVideoUrl').value.trim() || '',
                 featured: document.getElementById('editFeatured').checked || false
             };
             
@@ -2170,6 +2247,8 @@
             saveBtn.disabled = true;
             
             try {
+                console.log('Updating content with:', data);
+                
                 const response = await fetch(`${API_URL}/${type}/${id}`, {
                     method: 'PUT',
                     headers: {
@@ -2181,6 +2260,7 @@
                 
                 if (response.ok) {
                     const result = await response.json();
+                    console.log('Update success:', result);
                     
                     document.getElementById('editForm').innerHTML = `
                         <div style="text-align: center; padding: 40px 20px; color: #4CAF50;">
